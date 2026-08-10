@@ -11,7 +11,10 @@
 %
 % Notation lives in macros.tex and is shared with the English version.
 % ---------------------------------------------------------------
-\documentclass[a4paper,11pt,onecolumn]{jlreq}
+% baselineskip is tightened from the jlreq default so that the main text fits
+% the 8-page limit imposed by the assignment.  Body size stays at 11pt and the
+% margins stay at 25mm, both of which the assignment fixes.
+\documentclass[a4paper,11pt,onecolumn,baselineskip=16pt]{jlreq}
 
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb}
@@ -22,8 +25,20 @@
 
 \input{macros}
 
-\title{量子Mpemba効果の起源\\
----スペクトル機構，動的機構，そして温度計の問題---}
+% Vertical space around displays and floats, tightened for the same reason.
+\setlength{\abovedisplayskip}{5pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{5pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{3pt plus 2pt}
+\setlength{\belowdisplayshortskip}{4pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 3pt minus 3pt}
+\setlength{\floatsep}{10pt plus 3pt minus 3pt}
+\setlength{\intextsep}{10pt plus 3pt minus 3pt}
+
+% Heading spacing, likewise tightened.
+\ModifyHeading{section}{before_space=8pt,after_space=4pt}
+\ModifyHeading{subsection}{before_space=6pt,after_space=3pt}
+
+\title{量子Mpemba効果の二つの機構と\\有効温度の定義依存性}
 \author{京都大学 基礎物理学研究所 凝縮系物理 修士1年\\川合玲央}
 \date{\today}
 
@@ -68,10 +83,7 @@ Carolloら\cite{Carollo2021}はこの構造がLindblad方程式にそのまま�
 最緩和モードに直交させるユニタリ変換を緩和開始直前に施すことで緩和を指数関数的に加速できるという
 \emph{制御プロトコル}を提案した（可積分系での関連研究として\cite{Ares2023,Rylands2024}がある）．
 
-これらはいずれも時間非依存のMarkov生成子に立脚する．
-この記述はBorn近似・Markov近似・secular近似を順に施すことで得られるもので，
-浴の相関時間が系の緩和時間より十分短く系--浴結合が弱い場合に正当化されることが多い
-（第\ref{sec:discussion_spectral}節）．
+これらはいずれも時間非依存のMarkov生成子に立脚する（成立条件は付録\ref{sec:appendix_markov}）．
 扱う模型も可積分あるいは少数自由度の系に限られるため，
 古典実験で本質的とされる冷却の\emph{速さ}が理論の中で役割を果たさない．
 さらに深刻なのは，Hamiltonianがランダム行列として振る舞う量子カオス系では
@@ -82,9 +94,7 @@ Wangら\cite{Wang2024}はこの空白を埋める．
 彼らはSYK模型を強結合のSYK浴に結合させた系のクエンチダイナミクスをKadanoff--Baym方程式で厳密に解き，
 (i)MPCが結合$\Vsb$の閾値を超えたときにのみ現れ，微調整された初期条件を必要としないこと，
 (ii)同じ模型をLindblad方程式で記述するとMPCが消失すること，
-(iii)二浴の温度差はMPCをむしろ抑制すること---可積分系での既知の結果
-%\cite{WangWang2024} %間違い？？
-と逆である---
+(iii)二浴の温度差はMPCをむしろ抑制すること---可積分系での既知の結果\cite{WangWang2024}と逆である---
 を示した．
 (ii)は本レポートの議論にとって決定的である．
 Lindblad記述はまさに\cite{Carollo2021}の枠組みが成立する状況であり，
@@ -113,8 +123,8 @@ Wangらの新規性は，初期条件機構が働きにくい量子カオス系�
 \end{equation}
 と生成されるとき，$\gen$の固有値を$\lambda_1=0$，$0>\Re\lambda_2\ge\Re\lambda_3\ge\cdots$と並べ，
 右固有モードを$\reig{k}$，左固有モードを$\leig{k}$，双対性を$\ipr{\leig{k}}{\reig{h}}=\delta_{kh}$とする．
-以下では$\gen$が対角化可能で完全な双直交基底がとれることを仮定する．
-この仮定が破れてJordanブロックが生じる場合については第\ref{sec:discussion_spectral}節で論じる．
+以下では$\gen$が対角化可能で完全な双直交基底がとれることを仮定し，
+この仮定が破れる場合は第\ref{sec:discussion_spectral}節で論じる．
 このとき\eqref{eq:generator}の解は
 \begin{equation}
   \vstate(t) = \ssv + \sum_{k\ge2}\ovl{k}\,\ee^{\lambda_k t}\,\reig{k}\,,
@@ -128,9 +138,7 @@ $\ssv$は$\gen\ssv=0$を満たす定常状態，$\ovl{k}$は初期状態と第$k
 古典Markov過程では$(\reig{k},\leig{k})$は遷移速度行列$\Rmat$の右・左固有ベクトルで対$\ipr{\cdot}{\cdot}$はベクトルの内積，
 Lindblad方程式では$\reig{k},\leig{k}$は$\Lop$と随伴$\Lop^{\dagger}$の固有行列で
 対は$\ipr{\leig{k}}{\rho}=\tr[\leig{k}\rho]$となり\cite{Carollo2021}，
-\eqref{eq:spectral_unified}はこの両方を含む．
-$\leig{k}$は一般にHermiteでなく，$\ipr{\cdot}{\cdot}$はこの意味で双線形な双対対であって，
-Hermite内積としてのHilbert--Schmidt内積$\tr[\leig{k}^{\dagger}\rho]$とは区別される．
+\eqref{eq:spectral_unified}はこの両方を含む（$\ipr{\cdot}{\cdot}$の性質は付録\ref{sec:appendix_markov}）．
 すなわち
 \begin{align}
   \text{古典：}\quad \dot{p} &= \Rmat\,p\,, &
@@ -152,40 +160,18 @@ Wangら\cite{Wang2024}が扱うのは\eqref{eq:generator}の前提が成り立�
       \chi_a \psi_{i_1}\psi_{i_2}\cdots\psi_{i_n}
   \label{eq:H_coupled}
 \end{equation}
-を考える（$H_{\mathrm{SYK}}[J,\chi]$は付録の\eqref{eq:H_syk_pure}と同形）．
-結合定数は平均零のGauss分布に従い，分散は独立に
-\begin{align}
-  \overline{J_{i_1 i_2 i_3 i_4}^{\,2}} &= \frac{3!\,\Jsyk^2}{N^3}\,, &
-  \overline{\tilde{J}_{i_1 i_2 i_3 i_4}^{\,2}} &= \frac{3!\,\Jsyk^2}{N^6}\,, &
-  \overline{V_{a i_1 \cdots i_n}^{\,2}} &= \frac{n!\,\Vsb^2}{N^{2n}}
-  \label{eq:variances}
-\end{align}
-で与えられる．
-ここで$n$は系のMajorana fermion $1$個に対して結合する浴のMajorana fermionの個数であり，
-\cite{Wang2024}の数値計算では主に$n=3$が用いられている．
-$n+1$個のMajorana fermionの積がHermiteであるためには$n+1\equiv0,1\pmod 4$が必要で，$n=3$はこれを満たす．
+を考える（$H_{\mathrm{SYK}}[J,\chi]$は付録の\eqref{eq:H_syk_pure}と同形．
+結合定数の分散と結合次数$n$の値は付録\ref{sec:appendix_syk_bath}）．
 浴の自由度が系の$N$倍のオーダーで多いため浴は温度$\betabath^{-1}$を保つ理想的な熱浴として振る舞う．
-この系のクエンチダイナミクスはKeldysh輪郭上のKadanoff--Baym方程式
-\begin{equation}
-  \begin{split}
-    \ii\,\partial_{t_1}\Ggtr(t_1,t_2)
-      &= \int \dd{t_3}\Big[\Sret(t_1,t_3)\,\Ggtr(t_3,t_2)
-        + \Sgtr(t_1,t_3)\,\Gadv(t_3,t_2)\Big]\,,\\
-    -\ii\,\partial_{t_2}\Ggtr(t_1,t_2)
-      &= \int \dd{t_3}\Big[\Gret(t_1,t_3)\,\Sgtr(t_3,t_2)
-        + \Ggtr(t_1,t_3)\,\Sadv(t_3,t_2)\Big]
-  \end{split}
-  \label{eq:kadanoff_baym}
-\end{equation}
-で記述され，自己エネルギーは$\Sigma_\chi\sim\Jsyk^2 G_\chi^3+\Vsb^2 G_\psi^n$の形をとる．
-右辺には過去の全履歴にわたる時間積分，すなわち記憶核が現れる．
+この系のクエンチダイナミクスは，Keldysh輪郭上のKadanoff--Baym方程式（付録の\eqref{eq:kadanoff_baym}）で記述される．
+その右辺には過去の全履歴にわたる時間積分，すなわち記憶核が現れる．
 これが決定的な差異である．
 \eqref{eq:kadanoff_baym}は\eqref{eq:generator}のように時間非依存の単一の生成子で書かれた形ではないため，
 \eqref{eq:spectral_unified}のスペクトル分解をそのまま適用することはできない．
 ただしここで「生成子が存在しない」と言い切ることはできない．
-形式的には時間局所（time-convolutionless）展開によって時間局所的な生成子$\gen(t)$を構成しうるからである．
-しかし$\gen(t)$は時刻に依存するため固有値と固有モードが時々刻々変化し，
-$\ovl{k}$は\eqref{eq:spectral_unified}のような時間によらない展開係数としての意味をもたない．
+形式的には時間局所（time-convolutionless）展開によって時間局所的な生成子$\gen(t)$を構成しうるが，
+$\gen(t)$は時刻に依存するため固有値と固有モードが時々刻々変化し，
+$\ovl{k}$は時間によらない展開係数としての意味をもたないからである（付録\ref{sec:appendix_markov}）．
 以下で「スペクトル機構が適用できない」というのは，この限定された意味においてである．
 三つの設定の対応関係を表\ref{tab:unification}にまとめる．
 
@@ -235,9 +221,8 @@ Lu--Raz\cite{Lu2017}は初期分布を逆温度$\betainit$のGibbs分布に取�
 と表される．
 第一条件は最緩和モードの一意性を，第二条件は高温の初期状態のほうが遅いモードとの重なりが小さいことを要求し，同じ論法を加熱に適用すると$\abs{\ovl{2}^{\,h}}>\abs{\ovl{2}^{\,c}}$のもとでの逆Mpemba効果（低温の系がより速く加熱される）が予言される（一次元拡散過程と三状態系で例示）．
 
-Carolloら\cite{Carollo2021}は\eqref{eq:spectral_unified}をLindblad系に適用し，形式解
-$\ee^{t\Lop}[\rho_0]=\rss+\sum_{k\ge2}\ee^{t\lambda_k}\tr[\leig{k}\rho_0]\reig{k}$
-を出発点として，定常状態からの隔たりをHilbert--Schmidt距離$\mathcal{E}_t(\rho,\rss)=(\tr[(\ee^{t\Lop}[\rho]-\rss)^2])^{1/2}$で測る．
+Carolloら\cite{Carollo2021}は\eqref{eq:spectral_unified}をLindblad系に適用し，
+定常状態からの隔たりをHilbert--Schmidt距離$\mathcal{E}_t(\rho,\rss)=(\tr[(\ee^{t\Lop}[\rho]-\rss)^2])^{1/2}$で測る．
 最緩和モードが一意であれば，その長時間漸近形は$\abs{\ovl{2}}\ee^{\Re\gap t}$に比例し，
 緩和時間は$\tau=1/\abs{\Re\gap}$である．
 ここで彼らはLu--Razから一歩踏み込み，初期状態を受動的に選ぶのではなく，緩和開始直前にユニタリ変換$U$を施して能動的に$\ovl{2}$を消す．
@@ -247,7 +232,8 @@ $\ee^{t\Lop}[\rho_0]=\rss+\sum_{k\ge2}\ee^{t\lambda_k}\tr[\leig{k}\rho_0]\reig{k
   \label{eq:optimal_unitary}
 \end{equation}
 を満たす$U$を構成すると，緩和は第三モードに支配され，因子$\ee^{\,t(\abs{\Re\lambda_3}-\abs{\Re\gap})}$で指数関数的に加速される．
-彼らはこれをDicke模型と全対全相互作用スピン系で実証し，後者では一次転移近傍の準安定領域を回避できることを示した．
+彼らはこれをDicke模型と全対全相互作用スピン系で実証し，
+後者では$\abs{\Re\lambda_2}\ll\abs{\Re\lambda_3}$から生じる準安定領域を回避できることを示した．
 \eqref{eq:optimal_unitary}の実行には$\leig{2}$を陽に知っていることが必要である．
 固定した無秩序配位をもつ有限$N$系では$\leig{2}$は原理的には定まるが，
 大自由度のカオス系でこれを同定し対応するユニタリを実装することは実用上著しく困難である
@@ -287,14 +273,10 @@ Lindblad記述は無限温度の浴に弱く結合したSYK模型に相当する
 一方，厳密計算ではSYK模型のGreen関数は無限温度でも$\Jsyk$に比例する有限の幅をもつ\cite{Wang2024}．
 浴の記憶を捨てた瞬間に現象が消えることになる．
 
-\cite{Wang2024}はさらに，系を温度の異なる二つのSYK浴に結合させた設定も調べている．
-これは\eqref{eq:H_coupled}とは異なるHamiltonianによる別の設定である．
-そこでは二浴の温度差を大きくすると閾値結合はむしろ増大し，
-可積分系で温度差がMpemba効果を促進する結果\cite{WangWang2024}と逆であって，
-機構の差異を示す独立な証拠となる．
-なお同論文は，この二浴の場合に交差の回数が常に偶数であり，
-漸近的な終状態では温度の逆転が残らないことも認めている．
-この点は第\ref{sec:discussion_temperature}節の議論にとって重要である．
+\cite{Wang2024}はさらに，系を温度の異なる二つのSYK浴に結合させた別の設定も調べ，
+二浴の温度差を大きくすると閾値結合がむしろ増大することを示している
+（詳細と，同論文自身が認める限界は付録\ref{sec:appendix_twobath}）．
+可積分系で温度差がMpemba効果を促進する結果\cite{WangWang2024}と逆であり，機構の差異を示す独立な証拠となる．
 
 \subsection{三つの層への整理}
 \label{sec:results_synthesis}
@@ -354,15 +336,8 @@ MPCそのものは層(3)の問題により本計算の精度では確立でき�
 エネルギー$E_1<E_2<E_3$をもつ三準位系が逆温度$\betabath$の浴と接触する状況を考える．
 遷移速度行列$\Rmat$は詳細釣り合い$\Rmat_{ij}\ee^{-\betabath E_j}=\Rmat_{ji}\ee^{-\betabath E_i}$（$i\neq j$）と確率保存$\sum_i\Rmat_{ij}=0$を満たすものとする．
 三準位は\cite{Lu2017}が例示に用いた最小の離散系であり，$\Rmat$が$3\times3$であるため固有値と左右固有ベクトルを容易に求められる．
-具体的には対称な速度$\kappa_{ij}=\kappa_{ji}>0$を用いて
-\begin{equation}
-  \Rmat_{ij} = \kappa_{ij}\,\ee^{-\betabath(E_i-E_j)/2}\quad(i\neq j)\,,
-  \qquad
-  \Rmat_{ii} = -\sum_{j\neq i}\Rmat_{ji}
-  \label{eq:rate_matrix}
-\end{equation}
-と構成する．
-この形は詳細釣り合いを自動的に満たし，$\Rmat$が実対称行列に相似となるため固有値はすべて実数になる．
+$\Rmat$の具体的な構成は付録\ref{sec:appendix_rate}に与える．
+そこで用いる形は詳細釣り合いを自動的に満たし，$\Rmat$が実対称行列に相似となるため固有値はすべて実数になる．
 
 $\Rmat$を対角化して$\lambda_2,\lambda_3$と$\leig{2}$を求め，初期分布を逆温度$\betainit$のGibbs分布に取って$\ovl{2}(\betainit)=\ipr{\leig{2}}{\vstate(0)}$を計算し，その符号反転をまたぐ二つの初期温度から緩和させる．
 パラメータ$E=(E_1,E_2,E_3)=(0,1,5)$，
@@ -370,8 +345,7 @@ $\kappa=(\kappa_{12},\kappa_{13},\kappa_{23})=(0.3,2.0,0.001)$，$\betabath=0.5$
 $\Re\lambda_2>\Re\lambda_3$と$\ovl{2}$の第二の零点の存在を条件に走査して選んだ．
 
 結果を図\ref{fig:markov_a2}に示す．
-ここで用いる距離は規格化しない$L^1$ノルム$\norm{\vstate-\ssv}_1=\sum_i\abs{(\vstate-\ssv)_i}$，
-すなわち全変動距離の$2$倍である．
+距離は規格化しない$L^1$ノルム$\norm{\vstate-\ssv}_1=\sum_i\abs{(\vstate-\ssv)_i}$（全変動距離の$2$倍）である．
 固有値は$\lambda_2=-0.600$，$\lambda_3=-7.575$（ギャップ比$12.6$）でいずれも実数であり，
 $\ovl{2}$は$\betabath$のほかに$\betainit^{*}=0.125$でも零となる．
 $\betainit^{h}=0.100$と$\betainit^{c}=0.294$から出発させると$\abs{\ovl{2}}$はそれぞれ$0.0110$と$0.0330$であり，高温側は初期時刻で定常状態から\emph{より遠い}にもかかわらず（$L^1$距離で$0.388$対$0.172$），$t=0.305$で低温側を追い越して$\norm{\vstate(t)-\ssv}_1<10^{-3}$に$t=3.93$対$t=5.76$で到達する．
@@ -381,9 +355,9 @@ $\betainit^{h}=0.100$と$\betainit^{c}=0.294$から出発させると$\abs{\ovl{
 すなわち強Mpemba効果とは，初期状態の緩和が単に速いということではなく，
 長時間漸近を支配するモードへの射影が消え，緩和がより速い指数$\Re\lambda_3$に移ることを指す．
 
-\begin{figure}[htbp]
+\begin{figure}[tb]
   \centering
-  \includegraphics[width=0.85\linewidth]{figs/markov_a2.pdf}
+  \includegraphics[width=0.78\linewidth]{figs/markov_a2.pdf}
   \caption{三状態Markov模型による検証（$E=(0,1,5)$，$\kappa=(0.3,2.0,0.001)$，$\betabath=0.5$）．
            （a）$\ovl{2}$の初期逆温度依存性．$\betabath$のほかに$\betainit^{*}=0.125$（赤点）でも零となる．点線は（b）の初期温度．
            （b）定常状態への$L^1$距離．高温側（橙）は初期に低温側（緑）より遠いが$t=0.305$（灰破線）で追い越す．赤破線は$\betainit=\betainit^{*}$の強Mpemba効果．}
@@ -417,11 +391,9 @@ $d$は系の準位の消滅演算子，$\edot$はその準位エネルギー，$
 に集約される．
 $\hyb_0$は結合強度，$\bandw$はLorentz型バンドの半値半幅であり，
 浴の相関時間$\tau_{\mathrm{b}}\sim1/\bandw$を制御する唯一のパラメータである．
-$\bandw\to\infty$の広帯域極限では遅延自己エネルギーが$-\ii\hyb_0\delta(t-t')$となって時間局所化する．
-ただしこの極限でも$\Slss$には浴のFermi分布に由来する熱的相関時間$\sim\betabath$が残るため，
-運動方程式が完全にMarkov的になるにはさらに$\hyb_0\ll\betabath^{-1}$が要る．
-本節では$\hyb_0=1$に対し$\betabath^{-1}=4$であり，
-実際$\bandw$が大きい側では第\ref{sec:results_spectral}節の枠組みがよい近似で成立する（後述）．
+$\bandw\to\infty$の広帯域極限では運動方程式が時間局所化し，
+第\ref{sec:results_spectral}節の枠組みがよい近似で成立する
+（厳密な成立条件は付録\ref{sec:appendix_rlm}）．
 逆に$\bandw$が有限であれば\eqref{eq:kadanoff_baym}と同様の記憶核が現れる．
 したがって$(\hyb_0,\bandw)$平面を走査すれば，Markov極限から強結合非Markov領域までを単一の模型内で連続的に補間できる．
 
@@ -434,9 +406,8 @@ $\bandw\to\infty$の広帯域極限では遅延自己エネルギーが$-\ii\hyb
 (iii)その振動のもとで，異なる$\betainit$から出発した軌跡が交差する（MPC）．
 
 $\edot=1$，$\hyb_0=1$，$\betabath=0.25$とし，$\betainit\in\{0.02,\,0.20\}$（いずれも浴より高温）から出発させた結果を図\ref{fig:rlm_beta_eff}に示す．
-$\betaeff$は\eqref{eq:beta_eff}のFDT形$\tanh(\beta\omega/2)$への最良フィットとして定める．
-実装の検証として，別途$\hyb_0=0.1$，$\bandw=10$，$\betabath=1$の弱結合設定で自己テストを行い，
-$\betaeff(t\to\infty)$が$\betabath$に相対誤差$5.3\times10^{-5}$で一致することを確認した．
+$\betaeff$は\eqref{eq:beta_eff}のFDT形$\tanh(\beta\omega/2)$への最良フィットとして定める
+（実装の検証は付録\ref{sec:appendix_rlm}）．
 
 予言(i)と(ii)は確認された．
 $\bandw=20$では$\betaeff(t)$は$0.24997$へ収束して$\betabath$と相対誤差$1.1\times10^{-4}$で一致し，
@@ -457,12 +428,13 @@ $\bandw=1$では，窓を$2.0$--$4.0$の範囲で変えたときの$\betaeff$の
 したがって閾値$\hyb_0^{\mathrm{th}}$を定義することも，その$\betainit$依存性を論じることもできない．
 交差を主張するには，フィット窓・打ち切り・格子間隔に対する系統誤差が
 軌跡の隔たりより小さいことを示す必要がある．
-対照的に，非平衡分布と浴の分布の差から構成した距離指標$\Dbath(t)$（\eqref{eq:distance_bath}）は
+対照的に，非平衡分布と浴の分布の差から構成した距離指標$\Dbath(t)$
+（第\ref{sec:discussion_temperature}節の\eqref{eq:distance_bath}で定義する）は
 両方の帯域幅で単調に減少する．
 
-\begin{figure}[htbp]
+\begin{figure}[tb]
   \centering
-  \includegraphics[width=\linewidth]{figs/rlm_beta_eff.pdf}
+  \includegraphics[width=0.92\linewidth]{figs/rlm_beta_eff.pdf}
   \caption{共鳴準位模型による検証（$\edot=1$，$\hyb_0=1$，$\betabath=0.25$）．
            （a）$\bandw=20$（Markov的）．$\betaeff$は$\betabath$に収束し，構造の振幅は$10^{-4}$の範囲にとどまる．
            （b）$\bandw=1$．$\betaeff$は振動し負値もとる．帯はFDTフィット窓を$2.0$--$4.0$で変えたときの広がりであり，すべての時刻で二つの初期温度の軌跡の差を上回る．
@@ -479,10 +451,8 @@ $\bandw=1$では，窓を$2.0$--$4.0$の範囲で変えたときの$\betaeff$の
 \label{sec:discussion_spectral}
 
 第\ref{sec:results_spectral}節の議論は，(i)生成子$\gen$が時間非依存であること，(ii)$\gen$が対角化可能であること，(iii)最緩和モードが一意であること，に依拠する．
-(i)は微視的にはBorn近似・Markov近似・secular近似の組合せから導かれるもので，
-このうちどれが本質的かは模型に依存する．
-浴の相関時間が短いことはMarkov近似を支えるが，Lindblad形式を得るにはさらに弱結合とsecular近似が要り，
-「浴の相関時間が零ならばLindblad」という単純な含意は成り立たない．
+(i)はBorn近似・Markov近似・secular近似の組合せから導かれるものであり，
+「浴の相関時間が零ならばLindblad」という単純な含意は成り立たない（付録\ref{sec:appendix_markov}）．
 (i)が破れれば\eqref{eq:spectral_unified}そのものが書けない．
 (ii)が破れてJordanブロックが生じると緩和は$t^m\ee^{\lambda t}$の形をとって$\ovl{2}$による特徴づけは修正を要する．
 (iii)は\eqref{eq:mpemba_condition}の第一条件として明示されており，$\Re\lambda_2=\Re\lambda_3$では加速率が零となり制御プロトコルは意味を失う．
@@ -498,19 +468,8 @@ $\ovl{2}=0$としても短時間領域では高次モードが寄与するため
 実際\cite{Wang2024}自身が，系の分布関数$\Feff(\omega,t)$と浴のFermi--Dirac分布との差から構成した距離指標が
 時間に対して\emph{単調に減少する}ことを報告している．
 ただし同論文は本文・補足資料のいずれにおいてもこの距離の定義式を与えておらず，図として示すにとどまる．
-そこで本レポートではこれを
-\begin{equation}
-  \Dbath(t) = \frac{\displaystyle\int \dd{\omega}\,A(\omega,t)\,
-                    \abs{\Feff(\omega,t) - \Feq(\omega,\betabath)}}
-                   {\displaystyle\int \dd{\omega}\,A(\omega,t)}
-  \label{eq:distance_bath}
-\end{equation}
-と再構成して用いる．
-ここで$A(\omega,t)=-2\Im\Gret(\omega,t)$はスペクトル関数，
-$\Feff$は付録の\eqref{eq:f_eff}で定義される非平衡分布関数である．
-スペクトル関数による重みづけは本質的である．
-狭帯域では$\abs{\omega}\gg\bandw$の領域に系のスペクトル重みがほとんどなく，そこでは$\Feff$は何にも拘束されない．
-重みなしの積分はこの空虚な領域に支配され，緩和とは無関係な値に飽和してしまう．
+そこで本レポートでは，これをスペクトル関数で重みづけて規格化した距離$\Dbath(t)$として再構成して用いる
+（定義式と，重みづけが本質的である理由は付録\ref{sec:appendix_distance}）．
 
 つまり分布関数のレベルでは単調に定常状態へ近づいているにもかかわらず$\betaeff(t)$だけが振動しており，
 交差が状態の非単調性ではなく温度計の非線形な応答に由来する可能性を示唆する．
@@ -584,7 +543,9 @@ $\betaeff(t)$の振動と負の有効逆温度は\cite{Wang2024}と同様に現�
 MPCを状態レベルの現象として定義するには観測量依存性を解決する必要がある．
 
 % ===============================================================
+\phantomsection
 \section*{Acknowledgements}
+\label{sec:ack}
 % ---------------------------------------------------------------
 
 本レポートの作成にあたり，テーマ決定および文献選定にご協力いただいた
@@ -594,9 +555,9 @@ MPCを状態レベルの現象として定義するには観測量依存性を�
 \paragraph{生成AIの利用について．}
 本レポートの作成にあたり生成AI（Claude Code）を，文献の探索，本文執筆の補助と日本語表現の校正，
 第\ref{sec:minimal}節の数値計算コードの下書き，式変形と書誌情報の照合に利用した．
-全文献の書誌情報はIOP Publishing，arXivおよびInspire HEPに当たって確認した．
+レビュー文献の選定および本文の大まかな構成決定は筆者が行った．
+また全文献の書誌情報はIOP Publishing，arXivおよびInspire HEPに当たって筆者が確認した．
 記述および数式の正しさに関する責任はすべて筆者が負う．
-% 文献の選定はおよび本文の大まかな構成決定は筆者が行った．
 
 % ===============================================================
 \bibliographystyle{unsrt}
@@ -625,8 +586,8 @@ SYK模型は$N$個のMajorana fermion $\chi_i$（$\{\chi_i,\chi_j\}=\delta_{ij}$
 で与えられる．
 結合定数$J_{i_1i_2i_3i_4}$は平均$\overline{J}=0$，分散$\overline{J^2}=3!\,\Jsyk^2/N^3$の
 Gauss分布に従うランダム変数であり，$\Jsyk$は唯一のエネルギースケールである．
-この模型が有用なのは，ある種の最大カオス状態を実現しているにも関わらず，ラージ$N$極限で厳密に解けるからである．
-無秩序平均は$G$--$\Sigma$作用によるレプリカ対角化を通じて実行され，
+この模型が有用なのは，ある種の最大カオス状態を実現しているにもかかわらず，ラージ$N$極限で厳密に解けるからである．
+無秩序平均は$G$--$\Sigma$作用によるレプリカ対角な鞍点を通じて実行され，
 ラージ$N$極限で単一の有効作用に帰着する点が本模型の可解性の依拠するところである．
 これにより自己エネルギーがGreen関数で閉じ，Schwinger--Dyson方程式
 \begin{equation}
@@ -674,15 +635,23 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
 \end{equation}
 という行列にまとめられる\cite{Wang2024}．
 輪郭の分枝を指す添字を$s,s'$としたのは，逆温度$\beta$との混同を避けるためである．
-大小Green関数はMajorana fermionに対して
+大小Green関数はMajorana fermionに対して，サイトについて平均した
 \begin{equation}
-  \Ggtr_\chi(t,t') = -\ii\left\langle \chi(t)\chi(t')\right\rangle\,,
+  \Ggtr_\chi(t,t') = -\frac{\ii}{N}\sum_i\left\langle \chi_i(t)\chi_i(t')\right\rangle\,,
   \qquad
-  \Glss_\chi(t,t') = +\ii\left\langle \chi(t')\chi(t)\right\rangle
+  \Glss_\chi(t,t') = +\frac{\ii}{N}\sum_i\left\langle \chi_i(t')\chi_i(t)\right\rangle
   \label{eq:greater_lesser}
 \end{equation}
-で定義され，スペクトル関数は$A=\ii(\Ggtr-\Glss)$である．
-後述の\eqref{eq:fdt_imparts}が示すとおり，これは$A=-2\Im\Gret$と同一の量である．
+で定義する．
+スペクトル関数はこれらを用いて
+\begin{equation}
+  A(t,t') = \ii\big[\Ggtr_\chi(t,t')-\Glss_\chi(t,t')\big]
+  = \frac{1}{N}\sum_i\left\langle \acomm{\chi_i(t)}{\chi_i(t')}\right\rangle
+  \label{eq:spectral_function}
+\end{equation}
+と定義される．
+平衡状態の周波数表示では，後述の\eqref{eq:fdt_imparts}が示すとおりこれは$A(\omega)=-2\Im\Gret(\omega)$に等しい．
+以下では文脈に応じて$A$を時間の関数とも周波数の関数とも書く．
 ここで$\mathbf{T}_c$は輪郭に沿った順序づけを表し，時間順序付き成分と反時間順序付き成分は大小Green関数によって
 \begin{equation}
   \begin{aligned}
@@ -701,7 +670,7 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
   \label{eq:retarded_advanced}
 \end{equation}
 と定義される．
-自己エネルギーについても同形の関係$\Sret(t,t')=\theta(t-t')[\Sgtr(t,t')-\Slss(t,t')]$が成り立ち\cite{Wang2024}，これらが本文\eqref{eq:kadanoff_baym}のKadanoff--Baym方程式に現れる量である．
+自己エネルギーについても同形の関係$\Sret(t,t')=\theta(t-t')[\Sgtr(t,t')-\Slss(t,t')]$が成り立ち\cite{Wang2024}，これらが\eqref{eq:kadanoff_baym}のKadanoff--Baym方程式に現れる量である．
 
 温度が時刻$t$とともに変化する場合，二時間相関関数を中心時刻$t=(t_1+t_2)/2$と相対時刻$t'=t_1-t_2$の組に取り直し，相対時刻についてのみ半区間Fourier変換
 \begin{equation}
@@ -720,9 +689,11 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
   \label{eq:fdt_general}
 \end{equation}
 が成り立つ．
-実際，スペクトル関数を$A(\omega)=-2\Im\Gret(\omega)$とすると，平衡状態では相対時刻の関数として
-$\Ggtr(t')\pm\Glss(t')=-\ii\int\frac{\dd{\omega}}{2\pi}A(\omega)\,\{1,\tanh(\beta\omega/2)\}\,\ee^{-\ii\omega t'}$
-である（上段が$-$，下段が$+$に対応）．
+実際，\eqref{eq:spectral_function}のスペクトル関数を用いると，平衡状態では相対時刻の関数として
+$\Ggtr(t')\mp\Glss(t')=-\ii\int\frac{\dd{\omega}}{2\pi}A(\omega)\,c_{\mp}(\omega)\,\ee^{-\ii\omega t'}$
+である．
+ここで$c_-(\omega)=1$，$c_+(\omega)=\tanh(\beta\omega/2)$であり，
+後者はFermi分布に対する恒等式$1-2\Feq(\omega,\beta)=\tanh(\beta\omega/2)$から従う．
 \eqref{eq:wigner}の半区間変換では$\int_0^{\infty}\dd{t'}\ee^{\ii(\omega-\omega')t'}=\pi\delta(\omega-\omega')+\ii\mathcal{P}(\omega-\omega')^{-1}$となるため，どちらにも主値積分に由来する実部が加わる．
 しかし虚部は$\delta$関数部分のみから決まり，
 \begin{equation}
@@ -748,38 +719,158 @@ $\Ggtr(t')\pm\Glss(t')=-\ii\int\frac{\dd{\omega}}{2\pi}A(\omega)\,\{1,\tanh(\bet
 このとき$\ii\Gkel$は実数なので虚部をとる操作は不要であり，\cite{Eberlein2017}の表式がそのまま成り立つ．
 $\Gret\propto\theta(t')$は$t'<0$で消えるため全区間変換でも\eqref{eq:fdt_imparts}と同じだが，$\Gkel$は消えないため，\eqref{eq:wigner}の半区間変換では純虚数性が失われて虚部も半分になる．
 \eqref{eq:fdt_general}はこの半区間変換に対応する表式である．
-なお\cite{Wang2024}（以下v3，2025年11月版に基づく）は，この変換区間の規約の違いを補足資料の脚注で明示的に議論しており，
-全区間変換に対応する別の定義$\beta'=-\Im\Gkel/(\omega\,\Im\Gret)$も併記している．
-規約が意識されている点は明記しておくべきである．
+なお\cite{Wang2024}（本レポートはv3，2025年11月版に基づく）は，この変換区間の規約の違いを補足資料の脚注で明示的に議論している．
+さらに同資料は，二時間相関関数の別の切り出し方（corner slice）と全区間変換に基づく定義
+$\beta'=-\Im\Gkel/(\omega\,\Im\Gret)$も併記している．
+規約の任意性が意識されている点は明記しておくべきである．
 そのうえで，同論文本文の\eqref{eq:fdt_general}に相当する式は$-\tanh(\beta\omega/2)$と書かれている一方，
 $\betaeff$の定義式は\eqref{eq:beta_eff}と同じ正符号であり，この二式は同一の規約のもとでは同時に成り立たない．
 本レポートでは，弱結合の共鳴準位模型において$\betaeff(t\to\infty)$が$\betabath$に相対誤差$5.3\times10^{-5}$で一致することを数値的に確認して\eqref{eq:fdt_general}の符号を確定した（第\ref{sec:minimal_rlm}節）．
 平衡状態では真の逆温度に一致するが，非平衡状態でこの量が系の何を反映しているかは自明でなく，本文第\ref{sec:discussion_temperature}節で批判的に検討する．
 
-最後に，本文\eqref{eq:distance_bath}に現れる非平衡分布関数を
+\subsection{分布関数と距離指標}
+\label{sec:appendix_distance}
+
+非平衡の分布関数は，平衡の分布関数を非平衡に拡張した
 \begin{equation}
   \Feff(\omega,t) = \Re\!\left[\frac{-\ii\,\Glss(\omega,t)}{A(\omega,t)}\right]\,,
   \qquad
   A(\omega,t) = -2\Im\Gret(\omega,t)
   \label{eq:f_eff}
 \end{equation}
-で定義する\cite{Wang2024}．
+で定義される\cite{Wang2024}．
 平衡状態では$\Feff$は逆温度$\beta$のFermi--Dirac分布$\Feq(\omega,\beta)=1/(1+\ee^{\beta\omega})$に一致し，
 非平衡ではそこからのずれが緩和の度合いを表す．
-
-$\Feff$を用いると，浴の分布との距離\eqref{eq:distance_bath}のほかに，
-その時刻の有効温度における平衡分布との距離
+本文第\ref{sec:discussion_temperature}節で用いる浴の分布との距離，および
+その時刻の有効温度における平衡分布との距離は，それぞれ
 \begin{equation}
-  \Deq(t) = \frac{\displaystyle\int \dd{\omega}\,A(\omega,t)\,
+  \Dbath(t) = \frac{\displaystyle\int \dd{\omega}\,A\,
+                    \abs{\Feff(\omega,t) - \Feq(\omega,\betabath)}}
+                   {\displaystyle\int \dd{\omega}\,A}\,,
+  \qquad
+  \Deq(t) = \frac{\displaystyle\int \dd{\omega}\,A\,
                   \abs{\Feff(\omega,t) - \Feq(\omega,\betaeff(t))}}
-                 {\displaystyle\int \dd{\omega}\,A(\omega,t)}
-  \label{eq:distance_eq}
+                 {\displaystyle\int \dd{\omega}\,A}
+  \label{eq:distance_bath}
 \end{equation}
-も構成できる．
-\eqref{eq:distance_bath}と同様，これも\cite{Wang2024}が図として示す距離関数を本レポートが再構成したものであり，
+である（$A=A(\omega,t)$）．
+スペクトル関数による重みづけは本質的である．
+狭帯域では$\abs{\omega}\gg\bandw$の領域に系のスペクトル重みがほとんどなく，そこでは$\Feff$は何にも拘束されない．
+重みなしの積分はこの空虚な領域に支配され，緩和とは無関係な値に飽和してしまう．
+これらはいずれも\cite{Wang2024}が図として示す距離関数を本レポートが再構成したものであり，
 同論文に定義式が与えられているわけではない．
 同論文は，$\Dbath(t)$が単調に減少する一方で$\Deq(t)$は時間に対して非単調であると報告しており，系の統計が瞬間瞬間の有効温度における平衡分布からも系統的にずれ続けることを示している．
 第\ref{sec:discussion_temperature}節の批判は主に$\Dbath(t)$の単調性に基づくが，$\Deq(t)$の非単調性もまた，有効温度という一変数だけでは非平衡状態を特徴づけられないことを示す傍証である．
+
+% ===============================================================
+\section{定式化の補足}
+\label{sec:appendix_supp}
+% ---------------------------------------------------------------
+
+本文で結論のみを述べた設定と手続きの詳細をまとめる．
+
+\subsection{Markov生成子とスペクトル分解の前提}
+\label{sec:appendix_markov}
+
+\eqref{eq:generator}のような時間非依存の生成子による記述は，系--浴の全体力学から
+Born近似（浴が系との相関をもたないとする），
+Markov近似（浴の相関時間を系の緩和時間に比べて無視する），
+secular近似（系の固有振動数差に比べて緩和率が小さいとして振動項を落とす）を経て得られる．
+このうちどれが本質的かは模型に依存する．
+浴の相関時間が短いことはMarkov近似を支えるが，完全正値性を保つLindblad形式を得るには
+弱結合とsecular近似が別途必要であり，
+「浴の相関時間が零ならばLindblad」という単純な含意は成り立たない．
+
+Lindblad系では\eqref{eq:spectral_unified}は形式解
+$\ee^{t\Lop}[\rho_0]=\rss+\sum_{k\ge2}\ee^{t\lambda_k}\tr[\leig{k}\rho_0]\,\reig{k}$
+の形をとる\cite{Carollo2021}．
+その双対対$\ipr{\cdot}{\cdot}$についても注意しておく．
+Lindblad系では$\leig{k}$は$\Lop^{\dagger}$の固有行列であって一般にHermiteでない．
+したがって$\ipr{\leig{k}}{\rho}=\tr[\leig{k}\rho]$は双線形な双対対であり，
+Hermite内積としてのHilbert--Schmidt内積$\tr[\leig{k}^{\dagger}\rho]$とは区別される．
+\cite{Carollo2021}および本レポートは前者の規約を用いる．
+
+記憶をもつ力学についても，形式的には時間局所（time-convolutionless）展開により
+$\dv*{\vstate}{t}=\gen(t)\,\vstate(t)$という時間局所的な形を構成できる．
+したがって「生成子が存在しない」という言い方は正確でない．
+しかし$\gen(t)$は時刻に依存するため，各時刻で固有値問題を解いても
+固有値$\lambda_k(t)$と固有モード$\reig{k}(t)$が時々刻々変化し，
+\eqref{eq:spectral_unified}のように初期状態だけで決まる時間非依存の展開係数$\ovl{k}$は定義されない．
+第\ref{sec:results_spectral}節のスペクトル機構が使えないというのは，この意味においてである．
+
+\subsection{系--浴結合SYK模型の結合定数とKadanoff--Baym方程式}
+\label{sec:appendix_syk_bath}
+
+本文\eqref{eq:H_coupled}の結合定数は平均零のGauss分布に従い，分散は独立に
+\begin{align}
+  \overline{J_{i_1 i_2 i_3 i_4}^{\,2}} &= \frac{3!\,\Jsyk^2}{N^3}\,, &
+  \overline{\tilde{J}_{i_1 i_2 i_3 i_4}^{\,2}} &= \frac{3!\,\Jsyk^2}{N^6}\,, &
+  \overline{V_{a i_1 \cdots i_n}^{\,2}} &= \frac{n!\,\Vsb^2}{N^{2n}}
+  \label{eq:variances}
+\end{align}
+で与えられる\cite{Wang2024}．
+ここで$n$は系のMajorana fermion $1$個に対して結合する浴のMajorana fermionの個数であり，
+\cite{Wang2024}の数値計算では主に$n=3$が用いられている．
+$n+1$個のMajorana fermionの積がHermiteであるためには$n+1\equiv0,1\pmod 4$が必要で，$n=3$はこれを満たす．
+クエンチダイナミクスは，付録\ref{sec:appendix_keldysh}のGreen関数を用いたKadanoff--Baym方程式
+\begin{equation}
+  \begin{split}
+    \ii\,\partial_{t_1}\Ggtr(t_1,t_2)
+      &= \int \dd{t_3}\Big[\Sret(t_1,t_3)\,\Ggtr(t_3,t_2)
+        + \Sgtr(t_1,t_3)\,\Gadv(t_3,t_2)\Big]\,,\\
+    -\ii\,\partial_{t_2}\Ggtr(t_1,t_2)
+      &= \int \dd{t_3}\Big[\Gret(t_1,t_3)\,\Sgtr(t_3,t_2)
+        + \Ggtr(t_1,t_3)\,\Sadv(t_3,t_2)\Big]
+  \end{split}
+  \label{eq:kadanoff_baym}
+\end{equation}
+で記述され，自己エネルギーは$\Sigma_\chi\sim\Jsyk^2 G_\chi^3+\Vsb^2 G_\psi^n$の形をとる\cite{Wang2024}．
+
+\subsection{二浴に結合したSYK模型}
+\label{sec:appendix_twobath}
+
+\cite{Wang2024}は，系を温度の異なる二つのSYK浴に結合させた設定も調べている．
+これは\eqref{eq:H_coupled}とは異なるHamiltonianによる別の設定であり，
+二つの結合$V_1,V_2$と二つの浴温度$\beta_{\mathrm{bath}1},\beta_{\mathrm{bath}2}$をもつ．
+二浴の平均温度を固定して温度差を大きくすると，MPCの出現に必要な閾値結合はむしろ増大する．
+可積分系で温度差がMpemba効果を促進する結果\cite{WangWang2024}と逆であり，
+本文第\ref{sec:results_wang}節で述べたとおり機構の差異を示す独立な証拠となる．
+
+ただし同論文自身が，この二浴の場合に交差の回数が常に偶数であり，
+漸近的な終状態では温度の逆転が残らないことを認めている．
+すなわちこの設定で観測されているのは過渡的な交差であって，
+初期状態と終状態だけを比較する元来のMpemba効果ではない．
+この点は，MPCが何を指す言葉なのかという本文第\ref{sec:discussion_temperature}節の問題に直結する．
+
+\subsection{三状態Markov模型の遷移速度行列}
+\label{sec:appendix_rate}
+
+第\ref{sec:minimal_markov}節の$\Rmat$は，対称な速度$\kappa_{ij}=\kappa_{ji}>0$を用いて
+\begin{equation}
+  \Rmat_{ij} = \kappa_{ij}\,\ee^{-\betabath(E_i-E_j)/2}\quad(i\neq j)\,,
+  \qquad
+  \Rmat_{ii} = -\sum_{j\neq i}\Rmat_{ji}
+  \label{eq:rate_matrix}
+\end{equation}
+と構成した．
+第一式より$\Rmat_{ij}\ee^{-\betabath E_j}=\kappa_{ij}\ee^{-\betabath(E_i+E_j)/2}$は$i\leftrightarrow j$について対称であり，詳細釣り合いが自動的に満たされる．
+第二式は列和を零にするので確率が保存される．
+さらに$D=\mathrm{diag}(\ee^{-\betabath E_i/2})$とすると$(D^{-1}\Rmat D)_{ij}=\kappa_{ij}$は実対称になる．
+したがって$\Rmat$の固有値はすべて実数であり，左右固有ベクトルは自動的に双直交になる．
+
+\subsection{共鳴準位模型の広帯域極限と数値的検証}
+\label{sec:appendix_rlm}
+
+$\bandw\to\infty$では遅延自己エネルギーが$-\ii\hyb_0\delta(t-t')$となって時間局所化する．
+ただしこの極限でも$\Slss$には浴のFermi分布に由来する熱的相関時間$\sim\betabath$が残るため，
+運動方程式が完全にMarkov的になるにはさらに$\hyb_0\ll\betabath^{-1}$が要る．
+第\ref{sec:minimal_rlm}節では$\hyb_0=1$に対し$\betabath^{-1}=4$であり，この不等式は大きな余裕をもって成り立つわけではない．
+ただし$\bandw=20$の数値結果では$\betaeff$が$\betabath$に$10^{-4}$の精度で収束しており，
+実際上は第\ref{sec:results_spectral}節の枠組みがよい近似で成立している．
+
+実装の検証として，別途$\hyb_0=0.1$，$\bandw=10$，$\betabath=1$の弱結合設定で自己テストを行い，
+$\betaeff(t\to\infty)$が$\betabath$に相対誤差$5.3\times10^{-5}$で一致することを確認した．
+この検証は\eqref{eq:fdt_general}の符号の確定にも用いている．
 
 % ===============================================================
 \section{数値計算コード}
