@@ -36,7 +36,7 @@
 
 % TODO: fill in the author name before submission.  The submitted PDF must be
 % named after the author, as required by the assignment.
-\title{量子ムペンバ効果の起源\\
+\title{量子Mpemba効果の起源\\
 ---スペクトル機構と動的機構の統一的記述と分離---}
 \author{川合玲央}
 \date{\today}
@@ -45,8 +45,11 @@
 \maketitle
 
 \begin{abstract}
-ムペンバ効果の起源をめぐる二つの整合しない描像を，共通の記法のもとで一貫した議論として再構成する．
-Lu--Raz\cite{Lu2017}による古典Markov過程の定式化とCarolloら\cite{Carollo2021}によるLindblad方程式への拡張は，緩和生成子のスペクトル分解における最緩和モードとの重なり係数$\ovl{2}$で現象を特徴づける点で同一の構造をもつ（\emph{スペクトル機構}）．
+Mpemba効果の起源をめぐる二つの整合しない描像を，共通の記法のもとで一貫した議論として再構成する．
+Lu--Raz\cite{Lu2017}による古典Markov過程の定式化と
+Carolloら\cite{Carollo2021}によるLindblad方程式への拡張は，
+緩和生成子のスペクトル分解における最緩和モードとの重なり係数$\ovl{2}$で現象を特徴づける点で
+同一の構造をもつ（\emph{スペクトル機構}）．
 一方Wangら\cite{Wang2024}は，強結合SYK模型において温度軌跡の交差が系--浴結合$\Vsb$のみに支配され初期条件に依存しないことを示した（\emph{動的機構}）．
 本レポートは，この対立が「時間局所的な生成子が存在するか否か」の一点に帰着することを示し，三状態Markov模型と共鳴準位模型により動的機構が相互作用にもカオス性にも依存しないことを検証したうえで，実効温度の定義依存性という観点から\cite{Wang2024}の限界を批判的に検討して未解決問題を提示する．
 \end{abstract}
@@ -56,12 +59,12 @@ Lu--Raz\cite{Lu2017}による古典Markov過程の定式化とCarolloら\cite{Ca
 \label{sec:intro}
 % ---------------------------------------------------------------
 
-高温の水が低温の水よりも速く凍るというムペンバ効果\cite{Mpemba1969}は，準静的熱力学では説明できない緩和現象の代表例である．
+高温の水が低温の水よりも速く凍るというMpemba効果\cite{Mpemba1969}は，準静的熱力学では説明できない緩和現象の代表例である．
 準静的な描像では冷却速度は状態量の関数であり，異なる初期温度から出発した温度軌跡が交差することは許されない．
 したがって温度軌跡の交差（Mpemba crossing，以下MPC）は，緩和過程が平衡状態の系列としては記述できないことの直接的な証拠となる\cite{Lu2017}．
 
 この現象に理論的基礎を与えたのがLu--Raz\cite{Lu2017}である．
-彼らはMarkov的緩和において，確率分布を遷移速度行列の固有モードに分解したときの第二モードの係数$\ovl{2}$が緩和の遅さを支配することを見出し，ムペンバ効果の十分条件を導いた．
+彼らはMarkov的緩和において，確率分布を遷移速度行列の固有モードに分解したときの第二モードの係数$\ovl{2}$が緩和の遅さを支配することを見出し，Mpemba効果の十分条件を導いた．
 要点は，緩和の速さが\emph{初期状態と特定の固有モードとの幾何学的な重なり}に還元される点にある．
 Carolloら\cite{Carollo2021}はこの構造がLindblad方程式にそのまま移植できることを示し，最緩和モードに直交させるユニタリ変換を緩和開始直前に施すことで緩和を指数関数的に加速できるという\emph{制御プロトコル}を提案した（可積分系での関連研究として\cite{Ares2023,Rylands2024}）．
 
@@ -185,7 +188,7 @@ Wangら\cite{Wang2024}が扱うのは\eqref{eq:generator}の前提が成り立�
 
 Lu--Raz\cite{Lu2017}は初期分布を逆温度$\betainit$のGibbs分布に取ることで$\ovl{k}$を$\betainit$の関数とみなす．
 長時間では\eqref{eq:spectral_unified}の和は最緩和モード$k=2$に支配されるから，定常状態への接近の遅さは$\abs{\ovl{2}(\betainit)}$で決まる．
-高温側の初期逆温度を$\betainit^{h}$，低温側を$\betainit^{c}$（$\betainit^{h}<\betainit^{c}$）とすると，ムペンバ効果の十分条件は
+高温側の初期逆温度を$\betainit^{h}$，低温側を$\betainit^{c}$（$\betainit^{h}<\betainit^{c}$）とすると，Mpemba効果の十分条件は
 \begin{equation}
   \lambda_2 > \lambda_3
   \quad\text{かつ}\quad
@@ -193,7 +196,7 @@ Lu--Raz\cite{Lu2017}は初期分布を逆温度$\betainit$のGibbs分布に取�
   \label{eq:mpemba_condition}
 \end{equation}
 と表される．
-第一条件は最緩和モードの一意性を，第二条件は高温の初期状態のほうが遅いモードとの重なりが小さいことを要求し，同じ論法を加熱に適用すると$\abs{\ovl{2}^{\,h}}>\abs{\ovl{2}^{\,c}}$のもとでの逆ムペンバ効果（低温の系がより速く加熱される）が予言される（一次元拡散過程と三状態系で例示）．
+第一条件は最緩和モードの一意性を，第二条件は高温の初期状態のほうが遅いモードとの重なりが小さいことを要求し，同じ論法を加熱に適用すると$\abs{\ovl{2}^{\,h}}>\abs{\ovl{2}^{\,c}}$のもとでの逆Mpemba効果（低温の系がより速く加熱される）が予言される（一次元拡散過程と三状態系で例示）．
 
 Carolloら\cite{Carollo2021}は\eqref{eq:spectral_unified}をLindblad系に適用し，形式解
 $\ee^{t\Lop}[\rho_0]=\rss+\sum_{k\ge2}\ee^{t\lambda_k}\tr[\leig{k}\rho_0]\reig{k}$
@@ -226,7 +229,7 @@ Wangら\cite{Wang2024}は\eqref{eq:H_coupled}のクエンチダイナミクス�
 
 同じ模型をLindblad方程式で記述するとMPCは消失する．
 Lindblad記述は無限温度の浴に弱く結合したSYK模型に相当するが，厳密計算ではGreen関数が無限温度でも$\Jsyk$に比例する有限の幅をもつのに対し，Lindblad近似はこれをDirac delta関数で置き換えてしまい，浴の記憶を捨てた瞬間に現象が消える．
-また二浴の温度差を大きくすると閾値結合はむしろ増大し，可積分系で温度差がムペンバ効果を促進する結果\cite{WangWang2024}と逆で，機構の差異を示す独立な証拠となる．
+また二浴の温度差を大きくすると閾値結合はむしろ増大し，可積分系で温度差がMpemba効果を促進する結果\cite{WangWang2024}と逆で，機構の差異を示す独立な証拠となる．
 
 \subsection{統一的解釈}
 \label{sec:results_synthesis}
@@ -262,14 +265,14 @@ $\Rmat$を対角化して$\lambda_2,\lambda_3$と$\leig{2}$を求め，初期分
 $\betainit^{h}=0.100$と$\betainit^{c}=0.294$から出発させると$\abs{\ovl{2}}$はそれぞれ$0.0110$と$0.0330$であり，高温側は初期時刻で定常状態から\emph{より遠い}にもかかわらず（$L^1$距離で$0.388$対$0.172$），$t=0.31$で低温側を追い越して$\norm{\vstate(t)-\ssv}_1<10^{-3}$に$t=3.93$対$t=5.76$で到達する．
 これは\eqref{eq:mpemba_condition}の予言そのものである．
 さらに$\betainit=\betainit^{*}$では$\ovl{2}=0$のため緩和が$\lambda_3$に支配され，同じ閾値に$t=0.78$で到達する．
-これが強ムペンバ効果である．
+これが強Mpemba効果である．
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\linewidth]{figs/markov_a2.pdf}
   \caption{三状態Markov模型による検証（$E=(0,1,5)$，$\Gamma=(0.3,2.0,0.001)$，$\betabath=0.5$）．
            （a）$\ovl{2}$の初期逆温度依存性．$\betabath$のほかに$\betainit^{*}=0.125$（赤点）でも零となる．点線は（b）の初期温度．
-           （b）定常状態への$L^1$距離．高温側（橙）は初期に低温側（緑）より遠いが$t=0.31$（灰破線）で追い越す．赤破線は$\betainit=\betainit^{*}$の強ムペンバ効果．}
+           （b）定常状態への$L^1$距離．高温側（橙）は初期に低温側（緑）より遠いが$t=0.31$（灰破線）で追い越す．赤破線は$\betainit=\betainit^{*}$の強Mpemba効果．}
   \label{fig:markov_a2}
 \end{figure}
 
@@ -344,7 +347,7 @@ $\betaeff$はFDTフィットに用いる周波数窓に強く依存し，$\bandw
 (iii)は\eqref{eq:mpemba_condition}の第一条件として明示されており，$\Re\lambda_2=\Re\lambda_3$では加速率が零となり制御プロトコルは意味を失う．
 
 より本質的な限界は，Hilbert--Schmidt距離の漸近形が\emph{長時間}の性質にすぎない点にある．
-$\ovl{2}=0$としても短時間領域では高次モードが寄与するため緩和が実際に速いかどうかは自明でなく，\cite{Carollo2021}の主張が意味をもつのは観測時間が$1/\abs{\Re\lambda_3}$より十分長い場合に限られ，本質的に短時間の現象である古典ムペンバ実験とは噛み合わない．
+$\ovl{2}=0$としても短時間領域では高次モードが寄与するため緩和が実際に速いかどうかは自明でなく，\cite{Carollo2021}の主張が意味をもつのは観測時間が$1/\abs{\Re\lambda_3}$より十分長い場合に限られ，本質的に短時間の現象である古典Mpemba実験とは噛み合わない．
 
 \subsection{実効温度の定義依存性}
 \label{sec:discussion_temperature}
@@ -364,7 +367,7 @@ $\ovl{2}=0$としても短時間領域では高次モードが寄与するため
 
 第\ref{sec:minimal_rlm}節の結果はこの批判を定量的にする．
 共鳴準位模型では$\Dbath(t)$が単調減少する一方で$\betaeff(t)$は振動し，軌跡の隔たりはフィット窓による系統的不定性より一桁小さかった．
-少なくともこの模型では交差は状態ではなく温度計の性質であり，系統誤差の評価と軌跡の隔たりとの比較がMPCの実在性を主張する最小限の手続きであろう（元来のムペンバ効果も温度計の読みで定義される）．
+少なくともこの模型では交差は状態ではなく温度計の性質であり，系統誤差の評価と軌跡の隔たりとの比較がMPCの実在性を主張する最小限の手続きであろう（元来のMpemba効果も温度計の読みで定義される）．
 スペクトル機構がこれを免れているのは$\ovl{2}$が状態に対して定義されているからである．
 
 \subsection{普遍性主張の検証状況}
@@ -395,7 +398,7 @@ $\Vsb$を増やせば$\lambda_L$は減少するから，MPCが現れる強結合
 候補として記憶核の汎関数や$\Feff(\omega,t)$の高次モーメントが考えられるが，$\ovl{2}$との接続は明らかでない．
 
 \paragraph{まとめ．}
-量子ムペンバ効果をめぐる二つの対立する描像を生成子のスペクトル分解という共通言語のもとで再構成し，両者が$\gen$の存否によって排他的に棲み分けることを示した．
+量子Mpemba効果をめぐる二つの対立する描像を生成子のスペクトル分解という共通言語のもとで再構成し，両者が$\gen$の存否によって排他的に棲み分けることを示した．
 最小模型による検証は，スペクトル機構が$\ovl{2}$の符号反転として確認できる一方，動的機構についてはカオス性が不要であることと交差が実効温度の定義の不定性に埋もれることを明らかにし，この不定性の評価が今後の課題として残された．
 
 % ===============================================================
@@ -407,9 +410,11 @@ $\Vsb$を増やせば$\lambda_L$は減少するから，MPCが現れる強結合
 \vspace{3\baselineskip}
 
 \paragraph{生成AIの利用について．}
-本レポートの作成にあたり生成AI（Claude）を，文献の探索，構成案の作成と日本語表現の校正，第\ref{sec:minimal}節の数値計算コードの下書き，式変形と書誌情報の照合に利用した．
+本レポートの作成にあたり生成AI（Claude）を，文献の探索，本文執筆の補助と日本語表現の校正，
+第\ref{sec:minimal}節の数値計算コードの下書き，式変形と書誌情報の照合に利用した．
 全文献の書誌情報は原論文，arXivまたはCrossrefに当たって確認した．
 記述および数式の正しさに関する責任はすべて筆者が負う．
+% 文献の選定はおよび本文の大まかな構成決定は筆者が行った．
 
 % ===============================================================
 \bibliographystyle{unsrt}
@@ -473,7 +478,7 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
   \label{eq:T_tildeT}
 \end{align}
 と表される．
-遅延・進延Green関数はこれらの差から
+遅延・先進Green関数はこれらの差から
 \begin{align}
   \Gret_\chi(t,t') &= \theta(t-t')\big[\Ggtr_\chi(t,t')-\Glss_\chi(t,t')\big]\,, \\
   G_\chi^{A}(t,t') &= \theta(t'-t)\big[\Glss_\chi(t,t')-\Ggtr_\chi(t,t')\big]
@@ -492,12 +497,24 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
 平衡状態では，ゆらぎ--応答関係（FDT）より
 \begin{equation}
   \frac{\Im\big[\Ggtr(\omega,t)+\Glss(\omega,t)\big]}{\Im\big[\Gret(\omega,t)\big]}
-  = -\tanh\!\left(\frac{\beta(t)\,\omega}{2}\right)
+  = \tanh\!\left(\frac{\beta(t)\,\omega}{2}\right)
   \label{eq:fdt_general}
 \end{equation}
-が成り立つ\cite{Wang2024}．
-これを$\omega\to0$で展開すると，右辺は$-\beta(t)\omega/2$に近づく．
-そこでWangら\cite{Wang2024}は，非平衡状態においても同じ極限操作
+が成り立つ．
+実際，スペクトル関数を$A(\omega)=-2\Im\Gret(\omega)$とすると，平衡状態では相対時刻の関数として
+$\Ggtr(t')\pm\Glss(t')=-\ii\int\frac{\dd{\omega}}{2\pi}A(\omega)\,\{1,\tanh(\beta\omega/2)\}\,\ee^{-\ii\omega t'}$
+である（上段が$-$，下段が$+$に対応）．
+\eqref{eq:wigner}の半区間変換では$\int_0^{\infty}\dd{t'}\ee^{\ii(\omega-\omega')t'}=\pi\delta(\omega-\omega')+\ii\mathcal{P}(\omega-\omega')^{-1}$となるため，どちらにも主値積分に由来する実部が加わる．
+しかし虚部は$\delta$関数部分のみから決まり，
+\begin{equation}
+  \Im\big[\Ggtr+\Glss\big] = -\tfrac{1}{2}A(\omega)\tanh\!\left(\frac{\beta\omega}{2}\right)\,,
+  \qquad
+  \Im\big[\Ggtr-\Glss\big] = \Im\Gret = -\tfrac{1}{2}A(\omega)
+  \label{eq:fdt_imparts}
+\end{equation}
+となる．
+\eqref{eq:fdt_general}が複素数どうしの比ではなく虚部どうしの比として書かれるのは，この主値部分を分子・分母の双方から落とし，$\delta$関数部分の比を取り出すためである．
+\eqref{eq:fdt_general}を$\omega\to0$で展開すると右辺は$\beta(t)\,\omega/2$に近づくので，Wangら\cite{Wang2024}は非平衡状態においても同じ極限操作
 \begin{equation}
   \betaeff(t) = \left.
   \frac{2\,\Im\big[\Ggtr(\omega,t)+\Glss(\omega,t)\big]}
@@ -506,6 +523,14 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
   \label{eq:beta_eff}
 \end{equation}
 によって実効逆温度を定義する．
+この温度計を最初に導入した\cite{Eberlein2017}は，Keldysh成分$\Gkel=\Ggtr+\Glss$を用いて同じ関係を$\tanh(\beta\omega/2)=\ii\Gkel/A$と書いている．
+これは$\Gkel$を相対時刻の\emph{全区間}で変換した場合の表式である．
+全区間変換では$\int_{-\infty}^{\infty}\dd{t'}\ee^{\ii(\omega-\omega')t'}=2\pi\delta(\omega-\omega')$となって主値部分が現れず，$\Gkel(\omega)=-\ii A(\omega)\tanh(\beta\omega/2)$は純虚数になる．
+このとき$\ii\Gkel$は実数なので虚部をとる操作は不要であり，\cite{Eberlein2017}の表式がそのまま成り立つ．
+$\Gret\propto\theta(t')$は$t'<0$で消えるため全区間変換でも\eqref{eq:fdt_imparts}と同じだが，$\Gkel$は消えないため，\eqref{eq:wigner}の半区間変換では純虚数性が失われて虚部も半分になる．
+\eqref{eq:fdt_general}はこの半区間変換に対応する表式である．
+なお\cite{Wang2024}の本文では\eqref{eq:fdt_general}に相当する式が逆符号で書かれているが，同論文の$\betaeff$の定義式は\eqref{eq:beta_eff}と同じ正符号であり，両者は整合しない．
+本レポートでは，弱結合の共鳴準位模型において$\betaeff(t\to\infty)$が$\betabath$に相対誤差$5\times10^{-5}$で一致することを数値的に確認して\eqref{eq:fdt_general}の符号を確定した（第\ref{sec:minimal_rlm}節）．
 平衡状態では真の逆温度に一致するが，非平衡状態でこの量が系の何を反映しているかは自明でなく，本文第\ref{sec:discussion_temperature}節で批判的に検討する．
 
 実効温度の非平衡性を特徴づけるため，本文\eqref{eq:distance_bath}の$\Dbath(t)$のほかに，同一の実効温度における平衡分布との距離
