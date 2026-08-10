@@ -33,10 +33,13 @@ Two initial inverse temperatures straddling beta* are propagated:
     beta_0 = 0.294  (colder, |a_2| = 0.0330)
 
 The hotter state starts *farther* from stationarity in L1 distance (0.388 vs
-0.172) yet overtakes the colder one at t = 0.30 and reaches ||p - pi||_1 <
+0.172) yet overtakes the colder one at t = 0.305 and reaches ||p - pi||_1 <
 1e-3 at t = 3.93 instead of t = 5.76.  A third trajectory started exactly at
 beta* has a_2 = 0 and decays at the rate lambda_3, reaching the same threshold
 at t = 0.78 -- the strong Mpemba effect.
+
+The distance plotted is the unnormalised L1 norm ||p - pi||_1 = sum_i |p_i -
+pi_i|, i.e. twice the total variation distance.
 
 Usage
 -----
@@ -191,7 +194,7 @@ def main() -> None:
     if crossings.size:
         ax_b.axvline(crossings[0], color="0.7", lw=0.6, ls="-.")
     ax_b.set_xlabel(r"time $t$")
-    ax_b.set_ylabel(r"$\|p(t)-\pi\|_1$")
+    ax_b.set_ylabel(r"$\|\varrho(t)-\varrho_{\rm ss}\|_1$")
     ax_b.set_xlim(0.0, 8.0)
     ax_b.set_ylim(1e-6, 1.0)
     ax_b.legend(frameon=False, loc="upper right")
