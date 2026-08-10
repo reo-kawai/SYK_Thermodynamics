@@ -24,3 +24,9 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Third-party papers (arXiv sources and PDFs) downloaded for reading.
+# These are other authors' works; the repository is public and the arXiv
+# licences do not generally grant redistribution rights, so they are kept
+# locally but not tracked.  See CLAUDE.md for what belongs in references/.
+references/

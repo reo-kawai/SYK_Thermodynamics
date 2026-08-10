@@ -8,33 +8,44 @@ bath bandwidth, and writes
         results.npz        -- raw arrays behind the figure
         rlm_beta_eff.pdf   -- the figure (also copied into the report tree)
 
-What is being tested
---------------------
-The report predicts three things for this model.  The run below checks all
-three and, as it turns out, confirms one, partly confirms the second and
-refutes the third:
+What is and is not being tested
+------------------------------
+Note the scope: gamma0 is held FIXED at 1.0 and only the bath bandwidth is
+varied.  This run therefore probes the presence or absence of bath memory, not
+the coupling threshold that the reference discusses in terms of V.  No claim
+about a threshold in gamma0 can be based on it.
 
-  (i)   Wide band (Markovian): beta_eff(t) relaxes monotonically to beta_bath
-        and trajectories from different initial temperatures do not cross.
-        -- CONFIRMED, and beta_eff is insensitive to the fitting window.
+  (i)   Wide band (Markovian): beta_eff(t) approaches beta_bath without
+        transient structure.
+        -- CONFIRMED.  beta_eff settles to 0.24997 and every feature, both in
+        time and across fitting windows, stays within ~1e-4.  (The strict
+        monotonicity flag below is False only at that amplitude.)
 
-  (ii)  Finite bandwidth and strong coupling: beta_eff(t) develops large
-        non-monotonic transients, including excursions to negative values.
-        -- CONFIRMED.  Since this model is quadratic, that phenomenology
-        needs neither interaction, disorder, scrambling nor chaos.
+  (ii)  Finite bandwidth: beta_eff(t) develops large non-monotonic transients,
+        including excursions to negative values.
+        -- CONFIRMED.  Since this model is quadratic, *effective-temperature
+        oscillation and negative effective inverse temperature* need neither
+        interaction, disorder, scrambling nor chaos.  Note that beta_eff < 0
+        here means the FDT fit returns a negative slope; it does not mean the
+        state is a thermodynamic negative-temperature state.
 
-  (iii) A coupling threshold for trajectory crossings, independent of the
-        initial temperature.
-        -- NOT SUPPORTED.  The separation between trajectories started at
-        different beta_init is roughly an order of magnitude smaller than the
-        systematic spread of beta_eff over reasonable fitting windows, so no
-        crossing is resolvable and no threshold can be defined.
+  (iii) Trajectories started from different beta_init cross (an MPC).
+        -- NOT ESTABLISHED.  At *every* reported time the spread of beta_eff
+        over the fitting windows exceeds the separation between the two
+        trajectories (`separation_exceeds_spread_anywhere` is False; spread
+        median 0.043, max 1.318, versus separation max 0.164).  The crossing is
+        buried in the systematic uncertainty of the thermometer, so this run
+        can neither confirm nor exclude an MPC -- and in particular it does NOT
+        show that chaos is unnecessary for an MPC, only for (ii).
 
-Meanwhile the spectrally weighted distance D_bath(t) between the
-nonequilibrium distribution and the bath Fermi function decreases
-monotonically in *both* regimes.  The state relaxes monotonically while the
-thermometer oscillates -- the same structure the reference reports for the SYK
-model, here with the interaction switched off entirely.
+Meanwhile the spectrally weighted distance D_bath(t) between the nonequilibrium
+distribution and the bath Fermi function decreases monotonically in *both*
+regimes.  D_bath is itself a constructed distance measure -- it depends on the
+frequency window, the normalisation and the spectral weight -- not a state
+function, so the contrast with beta_eff is suggestive rather than decisive: the
+distribution-level relaxation and the thermometer reading behave differently,
+which is the same structure the reference reports for the SYK model, here with
+the interaction switched off entirely.
 
 Usage
 -----
@@ -203,7 +214,7 @@ def main() -> None:
             )
     ax.set_xlabel(r"time $t$")
     ax.set_ylabel(r"$D_{\rm bath}(t)$")
-    ax.set_title("(c) state-based distance", fontsize=8)
+    ax.set_title("(c) distribution-level distance", fontsize=8)
     ax.set_xlim(T_REPORT[0], T_REPORT[-1])
     ax.legend(frameon=False, loc="upper right")
 
