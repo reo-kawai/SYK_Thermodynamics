@@ -524,7 +524,19 @@ Hamiltonianがアンサンブルとして与えられる以上，特定の固有
 \label{sec:appendix_code}
 % ---------------------------------------------------------------
 
-% TODO: /code 以下のスクリプトが完成した時点で挿入する．
-% 課題の指示により，コードの掲載または公開リポジトリへのリンクが必要．
+第\ref{sec:minimal}節の数値計算に用いたPythonコードは，以下の公開リポジトリの\texttt{code/}以下で公開・共有可能である．
+
+\begin{center}
+  \url{https://github.com/reo-kawai/SYK_Thermodynamics}
+\end{center}
+
+\begin{itemize}
+  \item \texttt{code/mpemba\_three\_state.py}, \texttt{code/run\_three\_state\_markov.py}
+        --- 三状態Markov模型（第\ref{sec:minimal_markov}節，図\ref{fig:markov_a2}）．
+  \item \texttt{code/resonant\_level.py}, \texttt{code/run\_resonant\_level.py}
+        --- 共鳴準位模型（第\ref{sec:minimal_rlm}節，図\ref{fig:rlm_beta_eff}）．
+\end{itemize}
+
+各計算の出力（メタデータおよび生データ）は\texttt{code/out/}以下に保存されている．
 
 \end{document}
