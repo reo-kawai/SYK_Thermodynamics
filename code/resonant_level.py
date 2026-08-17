@@ -6,10 +6,11 @@ the same fluctuation-dissipation (FDT) prescription that Wang, Su & Wang
 [arXiv:2410.06669] apply to the strongly coupled SYK model.
 
 The point of the exercise is that this model is quadratic: there is no
-interaction, no disorder, no scrambling and no Lyapunov exponent.  If the
-oscillations and trajectory crossings of beta_eff(t) survive here, then those
-features cannot require quantum chaos -- only a finite bath memory time and a
-strong coupling.
+interaction, no disorder, no scrambling and no Lyapunov exponent.  A feature
+of beta_eff(t) that survives here therefore cannot require quantum chaos.  The
+calculation below establishes this for effective-temperature oscillations, but
+not for trajectory crossings, whose separation stays below the fitting-window
+systematic uncertainty.
 
 Model
 -----
@@ -24,12 +25,14 @@ whose Kramers-Kronig partner is, in closed form,
 
     Delta^R(omega) = Gamma_0 Lambda / (omega + i Lambda) .
 
-Lambda is the bath bandwidth and sets the bath correlation time tau_b ~ 1 /
-Lambda.  For Lambda -> infinity, Delta^R -> -i Gamma_0: the wide-band
-(Markovian) limit, in which the equation of motion becomes time-local and the
-Lindblad description is exact.  Finite Lambda introduces a genuine memory
-kernel.  Sweeping (Gamma_0, Lambda) therefore interpolates continuously
-between the Markovian regime and the strongly coupled non-Markovian one.
+Lambda is the bath bandwidth and sets the decay time tau_b ~ 1 / Lambda of the
+retarded bath kernel.  For Lambda -> infinity, Delta^R -> -i Gamma_0, so that
+the retarded equation becomes time-local.  The thermal lesser kernel still has
+a scale set by beta_bath, and a GKSL/Lindblad reduction requires an additional
+weak-coupling time-scale separation.  Finite Lambda introduces an explicit
+memory kernel.  Sweeping (Gamma_0, Lambda) therefore interpolates continuously
+between a wide-band weak-memory regime and a finite-memory strong-coupling one;
+it does not by itself prove CP indivisibility.
 
 Exact solution
 --------------
@@ -84,7 +87,7 @@ Wigner transformed over *positive relative time only*,
 which in a quench is necessarily cut off at t' = 2T because the dynamics start
 at t = 0.  In equilibrium the FDT reads
 
-    Im[G^>(omega) + G^<(omega)] / Im[G^R(omega)] = -tanh(beta omega / 2) ,
+    Im[G^>(omega) + G^<(omega)] / Im[G^R(omega)] = +tanh(beta omega / 2) ,
 
 so beta_eff(T) is obtained from the slope of the left-hand side at omega = 0.
 `effective_beta` extracts that slope by a least-squares fit through the origin
@@ -128,7 +131,7 @@ class ResonantLevel:
         Coupling strength, i.e. the peak height of the hybridisation function.
     bandwidth:
         Lorentzian half-width Lambda of the bath band.  `numpy.inf` selects the
-        wide-band (Markovian) limit.
+        strict wide-band limit of the retarded kernel.
     beta_bath:
         Inverse temperature of the bath.
     beta_init:
@@ -260,7 +263,7 @@ def frequency_grid(
 
     The wide-band limit is a special case: Gamma(omega) does not decay at all,
     the tail integral is only logarithmically controlled, and no finite grid is
-    accurate.  Use a large finite `bandwidth` to represent the Markovian regime
+    accurate.  Use a large finite `bandwidth` to represent the weak-memory regime
     instead; `solve_two_time` refuses the infinite case for this reason.
     """
     base = max(
@@ -532,15 +535,17 @@ def distance_to_bath(
 ) -> float:
     """Return the spectrally weighted distance of f_eff from the bath function,
 
-        D_bath(T) = int d_omega A(omega,T) |f_eff - f_bath| / int d_omega A(omega,T) .
+        D_bath(T) = int d_omega A_+(omega,T) |f_eff - f_bath| / int d_omega A_+(omega,T) .
 
     This is the resonant-level analogue of the distance function that the
     reference reports as decreasing monotonically while its beta_eff
     oscillates.  Comparing the two is the whole point: one is a property of the
     state, the other of the thermometer.
 
-    The spectral weight A(omega,T) = -2 Im G^R is essential rather than
-    cosmetic.  For a narrow band the level has almost no spectral weight at
+    The nonnegative spectral weight A_+(omega,T) = max(-2 Im G^R, 0) is
+    essential rather than cosmetic.  A finite-time Wigner transform can have
+    small negative spectral lobes, which are clipped exactly as in the code
+    below.  For a narrow band the level has almost no spectral weight at
     |omega| >> Lambda, where nothing constrains f_eff and the bath cannot
     thermalise anything; an unweighted integral is then dominated by that
     empty region and saturates at a large value that says nothing about

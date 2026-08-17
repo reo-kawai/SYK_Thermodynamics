@@ -15,11 +15,11 @@ varied.  This run therefore probes the presence or absence of bath memory, not
 the coupling threshold that the reference discusses in terms of V.  No claim
 about a threshold in gamma0 can be based on it.
 
-  (i)   Wide band (Markovian): beta_eff(t) approaches beta_bath without
+  (i)   Wide band (weak-memory side): beta_eff(t) approaches beta_bath without
         transient structure.
-        -- CONFIRMED.  beta_eff settles to 0.24997 and every feature, both in
-        time and across fitting windows, stays within ~1e-4.  (The strict
-        monotonicity flag below is False only at that amplitude.)
+        -- CONFIRMED.  beta_eff settles to 0.24997.  For t >= 3, its time
+        variation is at most 3.4e-4 and the maximum fitting-window spread is
+        6.7e-4, so the residual structure stays below 1e-3.
 
   (ii)  Finite bandwidth: beta_eff(t) develops large non-monotonic transients,
         including excursions to negative values.
@@ -84,7 +84,9 @@ N_TIME = 1201
 REL_MAX = 16.0
 OMEGA_WINDOWS = (2.0, 2.5, 3.0, 3.5, 4.0)  # spread over these gauges the systematics
 OMEGA_REFERENCE = 3.0
-T_REPORT = np.arange(2.0, 20.01, 0.25)
+# Start at t=3 so every reported point has a sufficiently long positive-time
+# Wigner slice for the fitting-window comparison used in the report.
+T_REPORT = np.arange(3.0, 20.01, 0.25)
 
 HERE = Path(__file__).resolve().parent
 OUT_ROOT = HERE / "out"
@@ -164,7 +166,7 @@ def main() -> None:
     colours = {BETA_INITS[0]: "C1", BETA_INITS[1]: "C2"}
 
     for ax, tag, title in (
-        (axes[0], "wide", rf"(a) $\Lambda={BANDWIDTHS['wide']:.0f}$ (Markovian)"),
+        (axes[0], "wide", rf"(a) $\Lambda={BANDWIDTHS['wide']:.0f}$ (wide band)"),
         (axes[1], "narrow", rf"(b) $\Lambda={BANDWIDTHS['narrow']:.0f}$"),
     ):
         for beta_init in BETA_INITS:
@@ -234,25 +236,32 @@ def main() -> None:
     shutil.copy(figure_path, REPORT_FIGS / "rlm_beta_eff.pdf")
 
     # Quantify the central claim: trajectory separation vs. window systematics.
-    late = T_REPORT >= 3.0
+    after_t3 = T_REPORT >= 3.0
     summary = {}
     for tag in BANDWIDTHS:
         a, b = (results[tag][bi] for bi in BETA_INITS)
-        separation = np.abs(a["beta_eff"] - b["beta_eff"])[late]
+        separation = np.abs(a["beta_eff"] - b["beta_eff"])
         spread = np.maximum(
             a["beta_high"] - a["beta_low"], b["beta_high"] - b["beta_low"]
-        )[late]
+        )
         summary[tag] = {
             "max_trajectory_separation": float(separation.max()),
             "median_window_spread": float(np.median(spread)),
             "max_window_spread": float(spread.max()),
-            "separation_exceeds_spread_anywhere": bool(np.any(separation > spread)),
-            "beta_eff_monotone": bool(
-                np.all(np.diff(a["beta_eff"][late]) >= -1e-6)
-                or np.all(np.diff(a["beta_eff"][late]) <= 1e-6)
+            "max_time_variation_after_t3": float(
+                max(np.ptp(a["beta_eff"][after_t3]), np.ptp(b["beta_eff"][after_t3]))
             ),
-            "distance_monotone": bool(
-                np.all(np.diff(a["distance"][late]) <= 1e-9)
+            "max_window_spread_after_t3": float(spread[after_t3].max()),
+            "separation_exceeds_spread_anywhere": bool(np.any(separation > spread)),
+            "beta_eff_monotone_both": bool(
+                all(
+                    np.all(np.diff(run["beta_eff"]) >= -1e-6)
+                    or np.all(np.diff(run["beta_eff"]) <= 1e-6)
+                    for run in (a, b)
+                )
+            ),
+            "distance_monotone_both": bool(
+                all(np.all(np.diff(run["distance"]) <= 1e-9) for run in (a, b))
             ),
             "beta_eff_final": float(a["beta_eff"][-1]),
         }

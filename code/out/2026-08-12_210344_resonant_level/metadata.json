@@ -1,0 +1,59 @@
+{
+  "generated_utc": "2026-08-12T12:03:45.117173+00:00",
+  "script": "run_resonant_level.py",
+  "eps_d": 1.0,
+  "gamma0": 1.0,
+  "beta_bath": 0.25,
+  "beta_inits": [
+    0.02,
+    0.2
+  ],
+  "bandwidths": {
+    "wide": 20.0,
+    "narrow": 1.0
+  },
+  "rel_max": 16.0,
+  "omega_windows": [
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0
+  ],
+  "omega_reference": 3.0,
+  "equilibrium_selftest": {
+    "completeness_error": 4.4702383831252135e-06,
+    "beta_late": 0.9999471681970226,
+    "beta_bath": 1.0,
+    "relative_error": 5.2831802977437725e-05,
+    "passed": true
+  },
+  "completeness_errors": {
+    "wide": 1.8278389579684529e-07,
+    "narrow": 4.609400638955216e-10
+  },
+  "summary": {
+    "wide": {
+      "max_trajectory_separation": 9.081952498085633e-05,
+      "median_window_spread": 2.8213372547797322e-05,
+      "max_window_spread": 0.0006682410762144375,
+      "max_time_variation_after_t3": 0.0003319178574711923,
+      "max_window_spread_after_t3": 0.0006682410762144375,
+      "separation_exceeds_spread_anywhere": false,
+      "beta_eff_monotone_both": false,
+      "distance_monotone_both": true,
+      "beta_eff_final": 0.24997253465990507
+    },
+    "narrow": {
+      "max_trajectory_separation": 0.16366131000935835,
+      "median_window_spread": 0.043289320766832756,
+      "max_window_spread": 1.3183315143847842,
+      "max_time_variation_after_t3": 1.1600635457994724,
+      "max_window_spread_after_t3": 1.3183315143847842,
+      "separation_exceeds_spread_anywhere": false,
+      "beta_eff_monotone_both": false,
+      "distance_monotone_both": true,
+      "beta_eff_final": 0.25524999622404515
+    }
+  }
+}
