@@ -9,16 +9,17 @@
 |---|---|---|
 | **LR** | Lu & Raz, *PNAS* **114**, 5083 (2017) | arXiv:1609.05271 absページ + ar5iv本文 |
 | **CLL** | Carollo, Lasanta & Lesanovsky, *PRL* **127**, 060401 (2021) | arXiv:2103.05020 absページ + ar5iv本文 |
-| **WSW** | Wang, Su & Wang, arXiv:2410.06669 | `references/arXiv-2410.06669v3/` のソース配布（`main.tex`, `bib.bib`） |
+| **WSW** | Wang, Su & Wang, *PRB* **113**, 045119 (2026) | APS誌面 + `references/arXiv-2410.06669v3/` のソース配布（`main.tex`, `bib.bib`） |
 
-WSWは2026-08-10時点でjournal-refなし（v3: 2025-11-26）。提出前に再確認すること。
+WSWは2026-01-12に*Physical Review B*へ出版された（DOI: 10.1103/gjc2-8fkb）。
+本文の式と補足資料の検証にはarXiv:2410.06669v3（2025-11-26）を用いる。
 
 ---
 
 ## 1. 記法対応表（本ノートの中核）
 
 レポートでは統一記号として**状態 $\varrho$**、**生成子 $\mathcal{G}$** を導入した。
-定義は `notes_tex/report_quantum_mpemba/macros.tex` に集約してある。
+定義は `notes_tex/macros.tex` に集約してある。
 
 ### 1.1 スペクトル分解まわり
 

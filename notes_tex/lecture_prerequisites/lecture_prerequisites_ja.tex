@@ -1,0 +1,775 @@
+% ---------------------------------------------------------------
+% lecture_prerequisites_ja.tex
+%
+% Prerequisite lecture notes for report_quantum_mpemba_ja.tex.
+% Target reader: a master's student in condensed matter theory with no
+% background in the SYK model or in the statistical dynamics of open systems.
+%
+% Compile with LuaLaTeX from the repository root:
+%     latexmk -cd -lualatex -interaction=nonstopmode -halt-on-error \
+%       notes_tex/lecture_prerequisites/lecture_prerequisites_ja.tex
+%
+% Notation and bibliography data are shared through ../macros.tex and
+% ../refs.bib so that this note does not depend on a report-specific directory.
+% ---------------------------------------------------------------
+\documentclass[a4paper,11pt,onecolumn]{jlreq}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{physics}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\input{../macros}
+
+\title{量子Mpemba効果レポートのための予備知識}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本ノートは，レポート「量子Mpemba効果におけるスペクトル機構と動的機構」を読むために必要な道具立てを最短経路で用意することを目的とする．
+想定読者は，量子力学・統計力学・第二量子化の初歩は学んだが，SYK模型と開放系の統計動力学には触れたことのない修士学生である．
+記法はレポートと共通のマクロ定義を用いており，本ノートの記号はレポートの同じ記号と厳密に同一の意味をもつ．
+\end{abstract}
+
+% ===============================================================
+\section{このノートの読み方}
+\label{sec:howto}
+% ---------------------------------------------------------------
+
+レポートは二つの独立な理論的伝統を突き合わせている．
+一方は古典確率過程とLindblad方程式に基づく\emph{スペクトル機構}，他方はKeldysh形式で解かれる強結合SYK模型の\emph{動的機構}である．
+前者は第\ref{sec:markov}節--第\ref{sec:nonmarkov}節，後者は第\ref{sec:syk}節--第\ref{sec:rlm}節が担当する．
+対応関係を表\ref{tab:map}にまとめる．
+
+\begin{table}[htbp]
+  \centering
+  \caption{本ノートの各節とレポートの各節の対応．}
+  \label{tab:map}
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    本ノート & 内容 & レポートの対応箇所 \\
+    \midrule
+    第\ref{sec:markov}節 & 古典Markov過程とスペクトル分解 & 第2.1節，第3.1節，第4.1節 \\
+    第\ref{sec:lindblad}節 & Lindblad方程式とLiouvillianのスペクトル & 第2.1節，第3.1節 \\
+    第\ref{sec:nonmarkov}節 & 非Markov性，記憶核，時間局所展開 & 第2.2節，付録B.1 \\
+    第\ref{sec:syk}節 & Majorana fermionとSYK模型 & 第2.2節，付録A.1 \\
+    第\ref{sec:keldysh}節 & Keldysh形式と有効温度 & 第3.2節，付録A.2，付録A.3 \\
+    第\ref{sec:rlm}節 & 共鳴準位模型 & 第4.2節，付録B.5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+以下では$\hbar=k_B=1$とする．
+
+% ===============================================================
+\section{古典Markov過程とスペクトル分解}
+\label{sec:markov}
+% ---------------------------------------------------------------
+
+\subsection{マスター方程式と遷移速度行列}
+\label{sec:markov_master}
+
+離散的な状態$i=1,\dots,n$をもつ系が熱浴と接触し，状態間を確率的に飛び移る状況を考える．
+状態$i$を占める確率を$p_i(t)$，単位時間あたりに状態$j$から状態$i$へ移る確率を$\Rmat_{ij}$（$i\neq j$）とすると，確率の流入と流出の釣り合いから
+\begin{equation}
+  \dv{p_i(t)}{t}
+  = \sum_{j\neq i}\Rmat_{ij}\,p_j(t) - \Big(\sum_{j\neq i}\Rmat_{ji}\Big)p_i(t)
+  \label{eq:master_component}
+\end{equation}
+が成り立つ．
+右辺第一項が流入，第二項が流出である．
+対角成分を$\Rmat_{ii}\equiv-\sum_{j\neq i}\Rmat_{ji}$と定義すれば\eqref{eq:master_component}は行列形にまとまり，
+\begin{equation}
+  \dv{p(t)}{t} = \Rmat\,p(t)
+  \label{eq:master}
+\end{equation}
+と書ける．
+この$\Rmat$を遷移速度行列と呼ぶ．
+対角成分の定義から，$\Rmat$の各\emph{列}の和は零である：
+\begin{equation}
+  \sum_i \Rmat_{ij} = \Rmat_{jj} + \sum_{i\neq j}\Rmat_{ij}
+  = -\sum_{i\neq j}\Rmat_{ij} + \sum_{i\neq j}\Rmat_{ij} = 0\,.
+  \label{eq:conservation}
+\end{equation}
+これは全確率$\sum_i p_i$が保存されることと同値である．
+実際$\dv{t}\sum_i p_i = \sum_{ij}\Rmat_{ij}p_j = \sum_j\big(\sum_i\Rmat_{ij}\big)p_j = 0$となる．
+
+\subsection{定常分布と詳細釣り合い}
+\label{sec:markov_db}
+
+$\Rmat\ssv=0$を満たす分布$\ssv$を定常分布と呼ぶ．
+以下では，逆温度$\betabath$の単一熱浴と接触した系が熱平衡へ緩和するよう，力学が熱力学的に整合していると仮定する．
+この仮定のもとで定常分布はGibbs分布
+\begin{equation}
+  [\ssv]_i = \frac{\ee^{-\betabath E_i}}{Z}\,,
+  \qquad Z=\sum_j \ee^{-\betabath E_j}
+  \label{eq:gibbs}
+\end{equation}
+になる．
+ここで$E_i$は状態$i$のエネルギーである．
+これを保証する十分条件が\emph{詳細釣り合い}
+\begin{equation}
+  \Rmat_{ij}\,[\ssv]_j = \Rmat_{ji}\,[\ssv]_i
+  \qquad (i\neq j)
+  \label{eq:detailed_balance}
+\end{equation}
+である．
+すなわち$j\to i$の確率流と$i\to j$の確率流が個別に釣り合う．
+実際\eqref{eq:detailed_balance}が成り立てば，$(\Rmat\ssv)_i=\sum_j\Rmat_{ij}[\ssv]_j=\sum_{j\neq i}\Rmat_{ji}[\ssv]_i+\Rmat_{ii}[\ssv]_i=0$となり定常性が従う．
+
+\subsection{スペクトル分解と双直交基底}
+\label{sec:markov_spectral}
+
+\eqref{eq:master}は線形常微分方程式だから，$\Rmat$の固有値問題を解けば一般解が得られる．
+ここで$\Rmat$は一般に非対称なので，右固有ベクトル$\reig{k}$と左固有ベクトル$\leig{k}$を区別する必要がある：
+\begin{align}
+  \Rmat\,\reig{k} &= \lambda_k\,\reig{k}\,, &
+  \leig{k}^{\mathsf{T}}\,\Rmat &= \lambda_k\,\leig{k}^{\mathsf{T}}\,.
+  \label{eq:lr_eigen}
+\end{align}
+異なる固有値に属する左右の固有ベクトルは直交する．
+実際$\leig{k}^{\mathsf{T}}\Rmat\reig{h}$を二通りに評価すると$\lambda_k\ipr{\leig{k}}{\reig{h}}=\lambda_h\ipr{\leig{k}}{\reig{h}}$となり，$\lambda_k\neq\lambda_h$なら$\ipr{\leig{k}}{\reig{h}}=0$が従う．
+ここで$\ipr{a}{b}=\sum_i a_i b_i$である．
+規格化を調整して
+\begin{equation}
+  \ipr{\leig{k}}{\reig{h}} = \delta_{kh}
+  \label{eq:biorthogonal}
+\end{equation}
+とできる．
+これを双直交性と呼ぶ．
+
+$\Rmat$が対角化可能ならば$\{\reig{k}\}$は完全系をなすので，初期分布を$p(0)=\sum_k \ovl{k}\reig{k}$と展開できる．
+\eqref{eq:biorthogonal}を用いると展開係数は
+\begin{equation}
+  \ovl{k} = \ipr{\leig{k}}{p(0)}
+  \label{eq:overlap}
+\end{equation}
+と読み取れる．
+$\ovl{k}$は\emph{初期状態と第$k$モードの重なり}であり，レポートの議論全体の中心量である．
+時間発展は各モードごとに$\ee^{\lambda_k t}$を掛けるだけだから，
+\begin{equation}
+  p(t) = \sum_k \ovl{k}\,\ee^{\lambda_k t}\,\reig{k}
+  \label{eq:spectral_raw}
+\end{equation}
+となる．
+
+$k=1$のモードは特別である．
+\eqref{eq:conservation}は$(1,1,\dots,1)^{\mathsf{T}}$が固有値$0$の左固有ベクトルであることを意味するので，$\lambda_1=0$，$\leig{1}=(1,\dots,1)^{\mathsf{T}}$と取れる．
+このとき$\ovl{1}=\sum_i p_i(0)=1$であり，対応する右固有ベクトルは$\Rmat\reig{1}=0$すなわち$\reig{1}=\ssv$である．
+以下では$\Rmat$が既約で定常分布が一意であり，定常部分以外が長時間で減衰すると仮定する．
+このとき残りの固有値は負の実部をもち，実部の大きい順に
+\begin{equation}
+  \lambda_1 = 0\,,\qquad 0>\Re\lambda_2\ge\Re\lambda_3\ge\cdots
+  \label{eq:ordering}
+\end{equation}
+と並べる．
+以上をまとめると\eqref{eq:spectral_raw}は
+\begin{equation}
+  p(t) = \ssv + \sum_{k\ge2}\ovl{k}\,\ee^{\lambda_k t}\,\reig{k}
+  \label{eq:spectral}
+\end{equation}
+となる．
+これがレポート第2.1節のスペクトル分解（同式(2)）である．
+$\Re\lambda_k<0$より第二項は指数的に減衰し，長時間では最も減衰の遅い$k=2$のモード（\emph{最緩和モード}）が支配する．
+
+\subsection{詳細釣り合いによる対称化}
+\label{sec:markov_sym}
+
+詳細釣り合いが成り立つとき$\Rmat$の固有値はすべて実数になる．
+これを見るため$D=\mathrm{diag}(\sqrt{[\ssv]_1},\dots,\sqrt{[\ssv]_n})$として$S=D^{-1}\Rmat D$を作る．
+成分は$S_{ij}=[\ssv]_i^{-1/2}\Rmat_{ij}[\ssv]_j^{1/2}$である．
+\eqref{eq:detailed_balance}を$\Rmat_{ji}=\Rmat_{ij}[\ssv]_j/[\ssv]_i$の形で使うと
+\begin{equation}
+  S_{ji} = [\ssv]_j^{-1/2}\,\Rmat_{ji}\,[\ssv]_i^{1/2}
+         = [\ssv]_j^{-1/2}\cdot\frac{\Rmat_{ij}[\ssv]_j}{[\ssv]_i}\cdot[\ssv]_i^{1/2}
+         = [\ssv]_i^{-1/2}\Rmat_{ij}[\ssv]_j^{1/2} = S_{ij}
+  \label{eq:symmetrized}
+\end{equation}
+となり$S$は実対称である．
+実対称行列の固有値は実数で固有ベクトル$\phi_k$は正規直交に取れるから，$\Rmat=DSD^{-1}$より
+\begin{equation}
+  \reig{k} = D\phi_k\,,\qquad \leig{k} = D^{-1}\phi_k
+  \label{eq:lr_from_sym}
+\end{equation}
+とすれば$\ipr{\leig{k}}{\reig{h}}=\phi_k^{\mathsf{T}}\phi_h=\delta_{kh}$が自動的に満たされる．
+レポート第4.1節が「固有値はすべて実数であり，左右固有ベクトルは自動的に双直交になる」と述べているのはこの事実である．
+数値計算でも，非対称行列の固有値ソルバではなく$S$に対する対称行列ソルバを使えば精度と双直交性が保証される．
+
+\subsection{Mpemba効果の十分条件}
+\label{sec:markov_mpemba}
+
+初期分布を逆温度$\betainit$のGibbs分布に取ると，\eqref{eq:overlap}より重なり係数は$\betainit$の関数$\ovl{k}(\betainit)$になる．
+ここではさらに詳細釣り合いを仮定するので，第\ref{sec:markov_sym}節より固有値と固有モードは実数に取れる．
+長時間では\eqref{eq:spectral}の和が$k=2$に支配されるから，定常状態からの隔たりは
+\begin{equation}
+  \norm{p(t)-\ssv} \simeq \abs{\ovl{2}(\betainit)}\,\ee^{\Re\lambda_2 t}\,\norm{\reig{2}}
+  \label{eq:asymptotic}
+\end{equation}
+と振る舞う．
+指数の肩は初期条件に依らないので，\emph{十分長い時刻にどちらが定常状態に近いかは前置き因子$\abs{\ovl{2}}$で決まる}．
+高温側の初期逆温度を$\betainit^{h}$，低温側を$\betainit^{c}$（$\betainit^{h}<\betainit^{c}$）とすると，高温から出発した方が長時間漸近で先行するための十分条件は
+\begin{equation}
+  \Re\lambda_2 > \Re\lambda_3
+  \quad\text{かつ}\quad
+  \abs{\ovl{2}(\betainit^{c})} > \abs{\ovl{2}(\betainit^{h})}
+  \label{eq:mpemba_cond}
+\end{equation}
+となる\cite{Lu2017}．
+第一条件は最緩和モードが一意であること（縮退していれば\eqref{eq:asymptotic}が書けない）を，第二条件は高温側の方が遅いモードとの重なりが小さいことを要求する．
+これがレポート第3.1節のMpemba効果の十分条件（同式(5)）である．
+
+特に$\ovl{2}(\betainit^{*})=0$となる初期逆温度$\betainit^{*}$が存在すると，そこから出発した系は最緩和モードを一切励起せず，緩和は次に遅い指数$\Re\lambda_3$に移る．
+これを\emph{強Mpemba効果}と呼ぶ．
+$\ovl{2}(\betabath)=0$は初期状態が定常状態そのものである自明な零点だから，$(0,\betabath)$の内部に\emph{第二の}零点があることが強Mpemba効果の目印になる．
+
+% ===============================================================
+\section{開放量子系とLindblad方程式}
+\label{sec:lindblad}
+% ---------------------------------------------------------------
+
+\subsection{密度行列と縮約}
+\label{sec:lindblad_rho}
+
+量子系が外部環境と相関しているとき，系だけの情報は密度行列$\rho$に集約される．
+全体系の状態$\rho_{\mathrm{tot}}$から環境の自由度をトレースアウトした$\rho=\tr_{\mathrm{env}}\rho_{\mathrm{tot}}$が系の縮約密度行列であり，$\rho^{\dagger}=\rho$，$\rho\ge0$，$\tr\rho=1$を満たす．
+全体系はSchrödinger方程式に従うが，環境をトレースアウトした$\rho$の時間発展は一般にはユニタリでない．
+
+\subsection{GKSL（Lindblad）方程式}
+\label{sec:lindblad_gksl}
+
+有限次元系について，時間発展写像が時間一様な量子動力学半群をなし，各時刻で完全正値かつトレース保存であると仮定する．
+このとき，その連続な生成子の最も一般的な形はGKSL定理により
+\begin{equation}
+  \dv{\rho}{t} = \Lop[\rho]
+  = -\ii\comm{H}{\rho}
+    + \sum_{\mu}\left(\jump_\mu\,\rho\,\jump_\mu^{\dagger}
+      - \frac{1}{2}\acomm{\jump_\mu^{\dagger}\jump_\mu}{\rho}\right)
+  \label{eq:lindblad}
+\end{equation}
+に限られる\cite{Lindblad1976,Gorini1976}．
+環境相関時間が短いこと，弱い系--環境結合，Born近似およびsecular近似は，この半群を微視的模型から導くための代表的な十分条件であって，GKSL定理そのものの仮定ではない．
+$H$は系のHamiltonian，$\jump_\mu$は\emph{ジャンプ演算子}と呼ばれ，環境が引き起こす散逸過程（例えばエネルギー準位間の遷移）を表す．
+右辺第一項がユニタリ発展，第二項が散逸を担う．
+$\Lop$はLiouvillianと呼ばれ，行列ではなく行列に作用する線形写像（超演算子）である．
+
+\eqref{eq:lindblad}と古典の\eqref{eq:master}は，どちらも\emph{時間非依存の線形生成子が状態に作用する}という同一の構造をもつ．
+レポートが両者を統一記号$\dv*{\vstate}{t}=\gen\vstate$で扱えるのはこのためである．
+
+\subsection{Liouvillianのスペクトル分解}
+\label{sec:lindblad_spectral}
+
+$\Lop$も線形写像だから第\ref{sec:markov_spectral}節と同じ手続きが使える．
+右固有\emph{行列}$\reig{k}$を$\Lop[\reig{k}]=\lambda_k\reig{k}$で定める．
+Carolloらの規約に合わせ，観測量に作用するトレース双対写像$\Lop^{+}$を
+\begin{equation}
+  \tr\!\big[(\Lop^{+}[A])B\big]
+  = \tr\!\big[A\,\Lop[B]\big]
+  \label{eq:trace_dual}
+\end{equation}
+で定義し，左固有行列$\leig{k}$を$\Lop^{+}[\leig{k}]=\lambda_k\leig{k}$で定める．
+対$\ipr{\cdot}{\cdot}$は行列同士の
+\begin{equation}
+  \ipr{\leig{k}}{\rho} = \tr\!\big[\leig{k}\,\rho\big]
+  \label{eq:pairing}
+\end{equation}
+で与えられ，\eqref{eq:trace_dual}から\eqref{eq:biorthogonal}と同じ双直交性$\ipr{\leig{k}}{\reig{h}}=\delta_{kh}$が成り立つ．
+$\Lop^{+}$はしばしば随伴Liouvillianとも呼ばれるが，ここで固有行列を表す記号$\leig{k}$にはあらかじめHermite共役を吸収している．
+したがって\eqref{eq:pairing}は複素共役を含まない\emph{双線形}な対であり，Hermite内積としてのHilbert--Schmidt内積$\tr[\leig{k}^{\dagger}\rho]$とは別物である点に注意する．
+レポートおよび\cite{Carollo2021}は\eqref{eq:pairing}の規約を用いる．
+
+トレース保存$\dv{t}\tr\rho=\tr\Lop[\rho]=0$は，恒等演算子$\mathbb{1}$が固有値$0$の左固有行列であることを意味する．
+したがって古典の場合と同様に$\lambda_1=0$，$\leig{1}=\mathbb{1}$，$\reig{1}=\rss$（定常状態）となり，
+\begin{equation}
+  \rho(t) = \ee^{t\Lop}[\rho_0]
+  = \rss + \sum_{k\ge2}\ee^{t\lambda_k}\,\tr[\leig{k}\rho_0]\,\reig{k}
+  \label{eq:lindblad_spectral}
+\end{equation}
+を得る．
+$\Lop$は非Hermiteなので固有値$\lambda_k$は一般に複素数であり，$\Re\lambda_k$が減衰率，$\Im\lambda_k$が振動数を与える．
+順序づけ\eqref{eq:ordering}が実部で書かれるのはこのためである．
+
+\subsection{Hilbert--Schmidt距離と緩和の加速}
+\label{sec:lindblad_carollo}
+
+定常状態からの隔たりを測る自然な量の一つがHilbert--Schmidt距離
+\begin{equation}
+  \mathcal{E}_t(\rho,\rss)
+  = \Big(\tr\big[(\ee^{t\Lop}[\rho]-\rss)^2\big]\Big)^{1/2}
+  \label{eq:hs_distance}
+\end{equation}
+である．
+\eqref{eq:lindblad_spectral}を代入すると，最緩和固有値$\gap$が実数かつ非縮退なら長時間で$\mathcal{E}_t\propto\abs{\ovl{2}}\ee^{\gap t}$となり，緩和時間は$\tau=1/\abs{\gap}$である．
+
+ここでCarolloらは，初期状態を受動的に選ぶ代わりに，緩和開始直前にユニタリ変換$U$を施して能動的に$\ovl{2}$を消すことを提案した\cite{Carollo2021}．
+すなわち
+\begin{equation}
+  \tr\!\big[\leig{2}\,U\rho_0 U^{\dagger}\big] = 0
+  \label{eq:carollo}
+\end{equation}
+を満たす$U$を構成すると，緩和は第三モードに支配され，因子$\ee^{\,t(\abs{\Re\lambda_3}-\abs{\Re\gap})}$だけ指数関数的に加速される．
+これは第\ref{sec:markov_mpemba}節の強Mpemba効果の量子版であり，$\betainit^{*}$を探す代わりに$U$を設計する点だけが異なる．
+\eqref{eq:carollo}の実行には$\leig{2}$を陽に知っている必要があり，この要請が第\ref{sec:syk}節のSYK模型では満たしにくいことが，レポートの議論の出発点になる．
+
+% ===============================================================
+\section{非Markov性，記憶核，時間局所展開}
+\label{sec:nonmarkov}
+% ---------------------------------------------------------------
+
+第\ref{sec:lindblad}節の\eqref{eq:lindblad}は量子動力学半群の一般形であり，それ自体は弱結合近似を意味しない．
+ただし微視的な系--浴Hamiltonianから時間一様なGKSL方程式を導く標準的手順では，環境の相関時間を系の緩和時間に比べて無視するMarkov近似を用いる．
+強結合，構造化された浴，長い浴相関時間，または初期の系--浴相関はこの時間尺度分離を破りうるが，強結合だけから非Markov性が自動的に従うわけではない．
+何が起こるかを見るには射影演算子法が便利である．
+
+全体系のLiouvillianを$\mathcal{L}_{\mathrm{tot}}$，注目する自由度を取り出す射影を$\mathcal{P}$（例えば$\mathcal{P}\rho_{\mathrm{tot}}=(\tr_{\mathrm{env}}\rho_{\mathrm{tot}})\otimes\rho_{\mathrm{env}}^{\mathrm{eq}}$），その補射影を$\mathcal{Q}=1-\mathcal{P}$とする．
+全体系のvon Neumann方程式から$\mathcal{Q}$成分を消去すると，Nakajima--Zwanzig方程式
+\begin{equation}
+  \partial_t\,\mathcal{P}\rho_{\mathrm{tot}}(t)
+  = \mathcal{P}\mathcal{L}_{\mathrm{tot}}\mathcal{P}\rho_{\mathrm{tot}}(t)
+    + \int_0^{t}\dd{s}\,K(t-s)\,\mathcal{P}\rho_{\mathrm{tot}}(s)
+    + I(t)
+  \label{eq:nakajima_zwanzig}
+\end{equation}
+が厳密に得られる\cite{Nakajima1958,Zwanzig1960}．
+$K$は\emph{記憶核}，$I(t)$は初期相関に由来する非斉次項である．
+右辺第二項が，過去の全履歴$\{\rho(s)\}_{s<t}$にわたる時間積分になっている点が本質的である．
+これは$t$における変化率が$t$における状態だけでは閉じない時間非局所表示である．
+本ノートではこの記憶核をもつ表示を非Markov的と呼ぶが，記憶核が非零であることだけでは，量子情報で用いられるCP可分性の破れを証明したことにはならない．
+
+\eqref{eq:nakajima_zwanzig}は\eqref{eq:master}や\eqref{eq:lindblad}の形をしていないので，第\ref{sec:markov_spectral}節のスペクトル分解をそのまま適用できない．
+ただし「生成子が存在しない」と言い切ることもできない．
+$\mathcal{P}$成分の力学写像が考える時間区間で可逆なら，$\rho(s)$を$\rho(t)$で書き直す別の展開（時間局所展開，time-convolutionless展開）によって形式的に
+\begin{equation}
+  \partial_t\,\mathcal{P}\rho_{\mathrm{tot}}(t) = \gen(t)\,\mathcal{P}\rho_{\mathrm{tot}}(t)
+  \label{eq:tcl}
+\end{equation}
+という時間局所的な形が得られるからである．
+しかし$\gen(t)$は\emph{時刻に依存し}，一般には異なる時刻の生成子が可換でない．
+したがって各時刻で固有値問題を解いても固有値$\lambda_k(t)$と固有モード$\reig{k}(t)$が時々刻々変化してモード混合が起こり，\eqref{eq:spectral}や\eqref{eq:lindblad_spectral}のような「初期状態だけで決まる時間非依存の展開係数$\ovl{k}$」は一般には定義できない．
+レポートが「スペクトル機構が適用できない」と述べているのは，この限定された意味においてである．
+
+% ===============================================================
+\section{Majorana fermionとSYK模型}
+\label{sec:syk}
+% ---------------------------------------------------------------
+
+\subsection{Majorana fermion}
+\label{sec:syk_majorana}
+
+通常の複素フェルミオン演算子$c_a,c_a^{\dagger}$から，Hermite な組合せ
+\begin{equation}
+  \chi_{2a-1} = \frac{c_a + c_a^{\dagger}}{\sqrt{2}}\,,
+  \qquad
+  \chi_{2a} = \frac{c_a - c_a^{\dagger}}{\ii\sqrt{2}}
+  \label{eq:majorana_def}
+\end{equation}
+を作ると，$\chi_i^{\dagger}=\chi_i$であり，$\{c_a,c_b^{\dagger}\}=\delta_{ab}$から
+\begin{equation}
+  \acomm{\chi_i}{\chi_j} = \delta_{ij}
+  \label{eq:majorana_algebra}
+\end{equation}
+が従う．
+これがMajorana fermionである．
+\eqref{eq:majorana_algebra}は$\chi_i^2=1/2$を意味し，粒子数演算子に相当するものをもたない点が複素フェルミオンとの違いである．
+偶数$N$について，$N$個のMajorana fermionの既約表現は$2^{N/2}$次元のHilbert空間上に実現される．
+
+\subsection{SYK模型と無秩序平均}
+\label{sec:syk_model}
+
+SYK模型は$N$個のMajorana fermionが全対全のランダムな$4$体相互作用をする$(0+1)$次元（すなわち空間次元をもたない）の模型で，
+\begin{equation}
+  H_{\mathrm{SYK}}[J,\chi]
+  = \sum_{i_1 i_2 i_3 i_4}\frac{J_{i_1 i_2 i_3 i_4}}{4!}\,
+    \chi_{i_1}\chi_{i_2}\chi_{i_3}\chi_{i_4}
+  \label{eq:syk_hamiltonian}
+\end{equation}
+で定義される\cite{SachdevYe1993,MaldacenaStanford2016}．
+結合定数$J_{i_1i_2i_3i_4}$は添字について完全反対称で，平均零・分散
+\begin{equation}
+  \overline{J_{i_1i_2i_3i_4}^{\,2}} = \frac{3!\,\Jsyk^2}{N^3}
+  \label{eq:syk_variance}
+\end{equation}
+のGauss分布に従うランダム変数である．
+$4$体相互作用には$\order{N^4}$個の独立な項がある一方，各結合の典型的大きさは$\order{N^{-3/2}}$である．
+$N^{-3}$という分散のスケーリングは，メロン図がラージ$N$極限で支配的となり，自由エネルギーが$\order{N}$の広延量になるように選ばれている\cite{MaldacenaStanford2016}．
+孤立した$q=4$ SYK模型の平衡問題では$\Jsyk$が唯一のエネルギースケールなので，逆温度$\beta$との積$\beta\Jsyk$が温度を表す無次元パラメータになる．
+
+「ランダムな結合定数をもつ」というのは，$J$の各配位ごとに別のHamiltonianが定まるという意味である．
+物理量は$J$についてのアンサンブル平均（無秩序平均）で議論する．
+ラージ$N$極限では，熱力学量や低次の相関関数など自己平均する観測量について，典型的な一配位の値が無秩序平均へ近づく．
+
+\subsection{ラージ\texorpdfstring{$N$}{N}極限とSchwinger--Dyson方程式}
+\label{sec:syk_sd}
+
+SYK模型が解析的に扱えるのは，無秩序平均が実行できてラージ$N$極限で鞍点法が厳密になるからである．
+経路積分表示で$J$についてGauss積分を実行すると，作用は$\chi$の$4$体項の代わりに双局所量
+\begin{equation}
+  G(\tau_1,\tau_2) = \frac{1}{N}\sum_i \chi_i(\tau_1)\chi_i(\tau_2)
+  \label{eq:bilocal}
+\end{equation}
+の$4$乗を含む形になる．
+虚時間の$G$には慣習として$-\ii$を付けない．
+第\ref{sec:keldysh}節の実時間Green関数\eqref{eq:greater_lesser}は$-\ii$を含む別の規約なので，両者を比べる際は注意する．
+そこで$G$を独立変数として導入し，\eqref{eq:bilocal}を課すLagrange乗数$\Sigma$を入れると，作用は
+\begin{equation}
+  \frac{S}{N} = -\log\mathrm{Pf}\big(\partial_\tau-\Sigma\big)
+    + \frac{1}{2}\int\dd{\tau_1}\dd{\tau_2}
+      \left[\Sigma(\tau_1,\tau_2)G(\tau_1,\tau_2)
+        - \frac{\Jsyk^2}{4}G(\tau_1,\tau_2)^4\right]
+  \label{eq:gsigma}
+\end{equation}
+という$G$と$\Sigma$だけの形にまとまる（$G$--$\Sigma$作用）．
+全体に$N$が掛かっているので，$N\to\infty$では鞍点が厳密解を与える．
+$\Sigma$と$G$による変分から，虚時間のSchwinger--Dyson方程式
+\begin{equation}
+  \begin{split}
+    G(\ii\omega_n)^{-1} &= -\ii\omega_n - \Sigma(\ii\omega_n)\,,\\
+    \Sigma(\tau) &= \Jsyk^2\,G(\tau)^3
+  \end{split}
+  \label{eq:schwinger_dyson}
+\end{equation}
+が得られる．
+第一式は周波数空間で，第二式は時間空間で局所的な関係であり，両者を行き来しながら自己無撞着に解く．
+自己エネルギーがGreen関数だけで閉じる点が，この模型の可解性の本質である．
+
+低温・長時間極限（$\Jsyk\abs{\tau}\gg1$）では\eqref{eq:schwinger_dyson}の第一式の$-\ii\omega_n$（自由粒子項）が無視でき，残った方程式は時間の再パラメータ化$\tau\to f(\tau)$に対する不変性をもつ．
+共形鞍点は再パラメータ化対称性を$SL(2,\mathbb{R})$へ自発的に破り，無視した自由粒子項はこの対称性を明示的に破る．
+この擬Goldstoneモードの低エネルギー有効作用がSchwarzian作用になる\cite{MaldacenaStanford2016}．
+これがJT重力の境界揺らぎの作用と一致することが，SYK模型と重力理論の対応の根拠である．
+
+\subsection{量子カオスとカオス束縛}
+\label{sec:syk_chaos}
+
+量子系のカオス性を測る標準的な量が，時間順序が入れ替わった相関関数（OTOC）
+\begin{equation}
+  C(t) = -\frac{1}{N^2}\sum_{ij}
+    \expval{\comm{\chi_i(t)}{\chi_j(0)}^2}
+  \label{eq:otoc}
+\end{equation}
+である．
+古典カオスにおける初期値鋭敏性の量子版であり，カオス的な系では中間時間領域で
+\begin{equation}
+  C(t) \sim \frac{1}{N}\,\ee^{\lambda_L t}
+  \label{eq:lyapunov}
+\end{equation}
+と指数増大する．
+$\lambda_L$を量子Lyapunov指数と呼び，$C(t)$が$\order{1}$に達する時刻$\tau_S\sim\lambda_L^{-1}\log N$を\emph{スクランブル時間}と呼ぶ．
+スクランブルとは，局所的な情報が系全体の多体相関へ拡散して局所観測から取り出せなくなる過程である．
+
+熱平衡，解析性，ユニタリ性および相関関数の因子化などMaldacena--Shenker--Stanfordの仮定を満たす多自由度量子系では，$\lambda_L$に
+\begin{equation}
+  \lambda_L \le \frac{2\pi k_B T}{\hbar}
+  \label{eq:chaos_bound}
+\end{equation}
+という上限が導かれる（Maldacena--Shenker--Stanford限界）\cite{Maldacena2016}．
+SYK模型はラージ$N$かつ低温（$\beta\Jsyk\gg1$）の共形領域でこの限界を飽和し\cite{MaldacenaStanford2016}，この意味で「最大限にカオス的」である．
+ただし浴と結合した開放系ではLyapunov指数は結合強度に依存して減少しうるので，孤立系の最大カオス性をそのまま開放系に適用することはできない．
+
+レポートにとって重要なのは，ランダム性とカオス性がCarollo型制御の実装を自動的に保証しない点である．
+第\ref{sec:lindblad_carollo}節の構成には，実際に実現された生成子の左最緩和モード$\leig{2}$を知る必要がある．
+固定した無秩序配位ごとにそのモードを同定すれば制御は原理的に排除されないが，アンサンブル平均されたSYK記述だけから配位に依存しない最適ユニタリが存在するとは結論できない．
+
+% ===============================================================
+\section{Keldysh形式と有効温度}
+\label{sec:keldysh}
+% ---------------------------------------------------------------
+
+\subsection{なぜ実時間輪郭が要るか}
+\label{sec:keldysh_why}
+
+平衡系では虚時間$\tau\in[0,\beta]$の経路積分が使えた．
+分配関数$Z=\tr\ee^{-\beta H}$が虚時間発展演算子そのものだからである．
+ところがクエンチ後の非平衡状態では，系は特定の$\beta$をもつ平衡状態にないので，この手続きは使えない．
+
+代わりに，ある初期状態から実時間で発展させ，観測し，また初期時刻へ戻る，という閉じた経路を考える．
+これがKeldysh輪郭$\mathcal{C}$であり，未来へ向かう分枝$\mathcal{C}_+$と過去へ戻る分枝$\mathcal{C}_-$からなる．
+輪郭上の演算子には，どちらの分枝にいるかを示す添字$s=\pm$が付く．
+
+\subsection{輪郭順序Green関数と四つの成分}
+\label{sec:keldysh_components}
+
+輪郭に沿った順序づけ$\mathbf{T}_c$を用いて相関関数を定義すると，$s,s'$の組合せに応じて四つの成分が現れる：
+\begin{equation}
+  \hat{G}_{\chi,ss'}(t,t')
+  = -\ii\expval{\mathbf{T}_c\,\chi_s(t)\chi_{s'}(t')}
+  = \begin{pmatrix}
+      G_\chi^{T}(t,t') & \Glss_\chi(t,t') \\
+      \Ggtr_\chi(t,t') & G_\chi^{\tilde{T}}(t,t')
+    \end{pmatrix}\,.
+  \label{eq:contour}
+\end{equation}
+輪郭添字を$s,s'$と書くのは，逆温度$\beta$との混同を避けるためである．
+基本になるのは非対角成分の大小Green関数で，$N$個のサイトについて平均した
+\begin{equation}
+  \Ggtr_\chi(t,t') = -\frac{\ii}{N}\sum_i\expval{\chi_i(t)\chi_i(t')}\,,
+  \qquad
+  \Glss_\chi(t,t') = +\frac{\ii}{N}\sum_i\expval{\chi_i(t')\chi_i(t)}
+  \label{eq:greater_lesser}
+\end{equation}
+で定義される．
+対角成分は$\theta$関数で大小成分から組み立てられる：
+\begin{equation}
+  \begin{aligned}
+    G_\chi^{T}(t,t') &= \theta(t-t')\Ggtr_\chi + \theta(t'-t)\Glss_\chi\,,\\
+    G_\chi^{\tilde{T}}(t,t') &= \theta(t'-t)\Ggtr_\chi + \theta(t-t')\Glss_\chi\,.
+  \end{aligned}
+  \label{eq:T_components}
+\end{equation}
+$\mathcal{C}_+$上では時刻の大きい方が左に来るので通常の時間順序，$\mathcal{C}_-$上では逆順序になる．
+
+\subsection{遅延・先進・Keldysh成分}
+\label{sec:keldysh_rak}
+
+四成分は\eqref{eq:T_components}により独立でないので，物理的に意味の明確な組合せに移る．
+応答（因果性）を担うのが遅延・先進Green関数
+\begin{equation}
+  \begin{aligned}
+    \Gret_\chi(t,t') &= \theta(t-t')\big[\Ggtr_\chi-\Glss_\chi\big]\,,\\
+    \Gadv_\chi(t,t') &= \theta(t'-t)\big[\Glss_\chi-\Ggtr_\chi\big]\,,
+  \end{aligned}
+  \label{eq:retarded_advanced}
+\end{equation}
+統計（分布）を担うのがKeldysh成分$\Gkel=\Ggtr+\Glss$である．
+$\Gret$は$t<t'$で消えるので，外場への応答が原因より先に現れないことを保証する．
+
+スペクトル関数は
+\begin{equation}
+  A(t,t') = \ii\big[\Ggtr_\chi(t,t')-\Glss_\chi(t,t')\big]
+  = \frac{1}{N}\sum_i\expval{\acomm{\chi_i(t)}{\chi_i(t')}}
+  \label{eq:spectral_function}
+\end{equation}
+で定義される．
+\eqref{eq:majorana_algebra}より等時刻では$A(t,t)=1$であり，周波数表示では和則$\int\frac{\dd{\omega}}{2\pi}A(\omega)=1$になる．
+周波数表示では，$\Gret$が$t'<0$で消えることから
+\begin{equation}
+  A(\omega) = -2\Im\Gret(\omega)
+  \label{eq:spectral_from_retarded}
+\end{equation}
+が成り立つ．
+これは平衡・非平衡を問わず\eqref{eq:retarded_advanced}と\eqref{eq:spectral_function}の定義だけから従う関係であり，数値計算でも$A$はこの式で求める．
+
+\subsection{平衡状態のゆらぎ--応答関係}
+\label{sec:keldysh_fdt}
+
+平衡状態では大小Green関数はスペクトル関数とFermi分布$\Feq(\omega,\beta)=1/(1+\ee^{\beta\omega})$だけで書ける：
+\begin{align}
+  \Ggtr(\omega) &= -\ii A(\omega)\big[1-\Feq(\omega,\beta)\big]\,, &
+  \Glss(\omega) &= +\ii A(\omega)\,\Feq(\omega,\beta)\,.
+  \label{eq:kms}
+\end{align}
+$\Ggtr$は粒子を加える過程（空き準位が必要なので$1-\Feq$），$\Glss$は粒子を取り除く過程（占有が必要なので$\Feq$）に対応する．
+両者の差を取ると$\Ggtr-\Glss=-\ii A$となり\eqref{eq:spectral_function}と整合する．
+和を取ると，恒等式
+\begin{equation}
+  1-2\Feq(\omega,\beta)
+  = \frac{\ee^{\beta\omega}-1}{\ee^{\beta\omega}+1}
+  = \tanh\!\left(\frac{\beta\omega}{2}\right)
+  \label{eq:tanh_identity}
+\end{equation}
+を用いて
+\begin{equation}
+  \Gkel(\omega) = \Ggtr+\Glss = -\ii A(\omega)\tanh\!\left(\frac{\beta\omega}{2}\right)
+  \label{eq:fdt}
+\end{equation}
+を得る．
+これがゆらぎ--応答関係（FDT）である．
+統計を担う$\Gkel$が，応答を担う$A$に温度だけを含む因子を掛けた形になっている点が要点で，逆に言えば\emph{平衡状態では$\Gkel$と$A$の比が温度を教えてくれる}．
+
+\subsection{Wigner変換と有効温度}
+\label{sec:keldysh_wigner}
+
+クエンチ後の系では二時間相関関数$G(t_1,t_2)$は時間差だけの関数ではない．
+そこで中心時刻$t=(t_1+t_2)/2$と相対時刻$t'=t_1-t_2$に取り直し，相対時刻についてのみFourier変換して「時刻$t$における周波数分解」を作る．
+相対時刻の全区間で積分するのが通常のWigner変換であるが，レポートが従う\cite{Wang2024}は半区間で積分する
+\begin{equation}
+  G(\omega,t) = \int_0^{\infty}\dd{t'}\,\ee^{\ii\omega t'}\,
+  G\!\left(t+\frac{t'}{2},\,t-\frac{t'}{2}\right)
+  \label{eq:wigner}
+\end{equation}
+を用いる．
+この違いは重要である．
+半区間変換では
+\begin{equation}
+  \int_0^{\infty}\dd{t'}\ee^{\ii(\omega-\omega')t'}
+  = \pi\delta(\omega-\omega') + \ii\mathcal{P}\frac{1}{\omega-\omega'}
+  \label{eq:half_transform}
+\end{equation}
+となり，$\delta$関数のほかに主値積分に由来する項が現れる．
+その結果$\Gkel(\omega,t)$は純虚数でなくなり，\eqref{eq:fdt}をそのままの形では使えない．
+一方，平衡状態では虚部は$\delta$関数部分だけから決まるので，
+\begin{equation}
+  \frac{\Im\big[\Ggtr(\omega,t)+\Glss(\omega,t)\big]}{\Im\big[\Gret(\omega,t)\big]}
+  = \tanh\!\left(\frac{\beta(t)\,\omega}{2}\right)
+  \label{eq:fdt_wigner}
+\end{equation}
+という虚部どうしの比の形なら成り立つ．
+主値部分を分子と分母の双方から落とすために，複素数の比ではなく虚部の比で書かれているのである．
+
+非平衡状態で\eqref{eq:fdt_wigner}が厳密に成り立つ保証はないが，右辺を$\omega\to0$で展開すると$\beta(t)\omega/2$になることを利用して，
+\begin{equation}
+  \betaeff(t) = \left.
+  \frac{2\,\Im\big[\Ggtr(\omega,t)+\Glss(\omega,t)\big]}
+       {\omega\,\Im\big[\Gret(\omega,t)\big]}
+  \right|_{\omega\to0}
+  \label{eq:beta_eff}
+\end{equation}
+を\emph{有効逆温度}と定義する\cite{Eberlein2017,Wang2024}．
+全区間Wigner変換による温度抽出はEberleinらに，半区間変換と虚部の比による規約はWangらに基づく．
+平衡では真の逆温度に一致するが，非平衡では「平衡FDTを外挿して読み取った温度計の値」以上の意味はもたない．
+レポートが批判的に検討するのは，まさにこの点である．
+
+同様に，分布関数も平衡から非平衡へ拡張できる．
+平衡の\eqref{eq:kms}は$\Glss=\ii A\Feq$，すなわち$\Feq$がスペクトル関数に対する$\Glss$の比であることを述べている．
+これを非平衡へ外挿して
+\begin{equation}
+  \Feff(\omega,t) = \frac{-\Im\big[\Glss(\omega,t)\big]}{\Im\big[\Gret(\omega,t)\big]}
+  \label{eq:f_eff}
+\end{equation}
+と定義する．
+ここでも$\betaeff$と同じ理由で虚部どうしの比を取っている．
+実際\eqref{eq:wigner}の半区間変換では$\Im\Glss=\tfrac{1}{2}A\Feq$，$\Im\Gret=-\tfrac{1}{2}A$となるので，双方に現れる因子$1/2$と主値部分が比で打ち消え，平衡では$\Feff=\Feq$が回復する．
+
+規約には注意が要る．
+全区間変換を用いる文献では同じ量が$\Feff=\Re[-\ii\Glss/A]$と書かれる．
+全区間変換では$\Im\Glss=A\Feq$なのでこの形で$\Feq$が得られるが，半区間変換のもとで同じ形を使うと値がちょうど半分になる．
+逆に\eqref{eq:f_eff}を全区間変換に適用すれば$2\Feq$になる．
+$\betaeff$の符号・係数と同様，どちらの変換区間を採るかを決めてから式を選ばなければならない．
+
+$\betaeff$が一つの数へ圧縮した情報であるのに対し，$\Feff(\omega,t)$は周波数分解された情報を保つ点が違いである．
+
+\subsection{Kadanoff--Baym方程式}
+\label{sec:keldysh_kb}
+
+輪郭上のDyson方程式を実時間の成分に分解すると，大小Green関数に対する連立積分微分方程式
+\begin{equation}
+  \begin{split}
+    \ii\,\partial_{t_1}\Ggtr(t_1,t_2)
+      &= \int \dd{t_3}\Big[\Sret(t_1,t_3)\,\Ggtr(t_3,t_2)
+        + \Sgtr(t_1,t_3)\,\Gadv(t_3,t_2)\Big]\,,\\
+    -\ii\,\partial_{t_2}\Ggtr(t_1,t_2)
+      &= \int \dd{t_3}\Big[\Gret(t_1,t_3)\,\Sgtr(t_3,t_2)
+        + \Ggtr(t_1,t_3)\,\Sadv(t_3,t_2)\Big]
+  \end{split}
+  \label{eq:kadanoff_baym}
+\end{equation}
+が得られる．
+これがKadanoff--Baym方程式である．
+自己エネルギーの成分$\Sret,\Sgtr,\Sadv$はGreen関数から\eqref{eq:schwinger_dyson}の実時間版で定まる．
+
+注目すべきは右辺の時間積分である．
+時刻$t_1$における変化率が，過去の全時刻$t_3$にわたる積分で与えられている．
+これは第\ref{sec:nonmarkov}節の記憶核そのものであり，\eqref{eq:master}や\eqref{eq:lindblad}のような時間局所的な形とは本質的に異なる．
+数値的には$(t_1,t_2)$平面を格子に切り，因果性に従って対角線から外側へ順次埋めていく．
+
+% ===============================================================
+\section{共鳴準位模型}
+\label{sec:rlm}
+% ---------------------------------------------------------------
+
+\subsection{模型と厳密可解性}
+\label{sec:rlm_model}
+
+共鳴準位模型は，単一のフェルミオン準位が連続的な浴に結合した
+\begin{equation}
+  H = \edot\, d^{\dagger}d
+    + \sum_k \epsilon_k\, c_k^{\dagger}c_k
+    + \sum_k\left(V_k\, d^{\dagger}c_k + \mathrm{h.c.}\right)
+  \label{eq:rlm}
+\end{equation}
+で定義される．
+$d$は系の準位の消滅演算子，$\edot$はその準位エネルギー，$c_k$は浴のモード$k$の消滅演算子，$V_k$は混成振幅である．
+Hamiltonianが演算子の\emph{二次形式}である点が決定的で，相互作用項がないため運動方程式が閉じ，Green関数が厳密に求まる．
+SYK模型と比べると，相互作用・無秩序・カオス性のすべてが欠けている対照的な模型になっている．
+
+\subsection{混成関数と自己エネルギー}
+\label{sec:rlm_hyb}
+
+浴の性質は個々の$\epsilon_k,V_k$ではなく，混成関数
+\begin{equation}
+  \hyb(\omega) = \pi\sum_k\abs{V_k}^2\,\delta(\omega-\epsilon_k)
+  \label{eq:hybridization}
+\end{equation}
+だけを通じて系に効く．
+$\hyb(\omega)$は「周波数$\omega$に浴がどれだけ状態を用意しているか」を表す量である．
+系の準位の遅延自己エネルギーは
+\begin{equation}
+  \Sret(\omega) = \sum_k\frac{\abs{V_k}^2}{\omega-\epsilon_k+\ii 0^+}
+  = \int\frac{\dd{\epsilon}}{\pi}\,\frac{\hyb(\epsilon)}{\omega-\epsilon+\ii 0^+}
+  \label{eq:rlm_selfenergy}
+\end{equation}
+で与えられ，$\Im\Sret(\omega)=-\hyb(\omega)$が成り立つ．
+これを用いて$\Gret(\omega)=[\omega-\edot-\Sret(\omega)]^{-1}$が得られる．
+
+レポートはLorentz型
+\begin{equation}
+  \hyb(\omega) = \frac{\hyb_0\,\bandw^2}{\omega^2+\bandw^2}
+  \label{eq:lorentzian}
+\end{equation}
+を採る．
+$\hyb_0$は結合強度，$\bandw$はバンドの半値半幅である．
+このとき\eqref{eq:rlm_selfenergy}の積分は留数計算で実行でき，
+\begin{equation}
+  \Sret(\omega) = \frac{\hyb_0\,\bandw}{\omega+\ii\bandw}
+  \label{eq:rlm_selfenergy_lorentz}
+\end{equation}
+となる（積分変数$\epsilon$の下半平面の極$\epsilon=-\ii\bandw$のみが寄与する）．
+実際$\Im\Sret=-\hyb_0\bandw^2/(\omega^2+\bandw^2)=-\hyb(\omega)$が確かめられる．
+
+\subsection{広帯域極限とMarkov性}
+\label{sec:rlm_wbl}
+
+$\bandw$は混成関数の幅を決める唯一のパラメータであり，これに対応する浴の相関時間は$\tau_{\mathrm{b}}\sim1/\bandw$である．
+$\bandw\to\infty$の広帯域極限では\eqref{eq:rlm_selfenergy_lorentz}が定数$\Sret\to-\ii\hyb_0$になり，時間表示では$\Sret(t,t')=-\ii\hyb_0\delta(t-t')$すなわち記憶をもたない．
+したがって遅延成分に関する限り運動方程式は時間局所化する．
+
+ただしこれだけでは完全にMarkov的にはならない．
+$\Slss$には浴のFermi分布に由来する熱的相関時間$\sim\betabath$が残るからである．
+$\hyb_0\ll\betabath^{-1}$（結合が温度より弱い）は時間尺度分離の必要条件の一つだが，Lindblad形式への帰着には浴帯域と系のBohr周波数に関するBorn--Markov・secular条件も別途確認する必要がある．
+逆に$\bandw$が有限であれば\eqref{eq:kadanoff_baym}と同種の記憶核が現れる．
+
+したがって他の尺度を固定すれば，$\bandw$を変えることで浴の記憶時間を単一の模型内で連続的に調整できる．
+$\bandw\to\infty$だけでGKSL極限が保証されるわけではないが，必要なBorn--Markov・secular条件も満たす領域では第\ref{sec:lindblad}節の枠組みに近づき，有限の$\bandw$では第\ref{sec:nonmarkov}節の時間非局所性を調べられる．
+レポート第4.2節がこの模型を用いるのは，このためである．
+
+% ===============================================================
+\section{記法対応表}
+\label{sec:notation}
+% ---------------------------------------------------------------
+
+三つの原論文は互いに異なる記号を用いる．
+レポートは表\ref{tab:notation}の統一記法に読み替えたうえで議論している．
+
+\begin{table}[htbp]
+  \centering
+  \caption{統一記法と，各文脈での対応物．}
+  \label{tab:notation}
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    統一記号 & 意味 & 古典Markov & 量子Lindblad \\
+    \midrule
+    $\vstate$ & 状態 & 確率分布$p(t)$ & 密度行列$\rho(t)$ \\
+    $\gen$ & 生成子 & 速度行列$\Rmat$ & Liouvillian $\Lop$ \\
+    $\ssv$ & 定常状態 & Gibbs分布$\ssv$ & 定常状態$\rss$ \\
+    $\ipr{\cdot}{\cdot}$ & 双対対 & ベクトル内積 & $\tr[\leig{k}\rho]$ \\
+    $\reig{k},\leig{k}$ & 右／左固有モード & 固有ベクトル & 固有行列 \\
+    $\ovl{k}$ & 重なり係数 & \multicolumn{2}{l}{$\ipr{\leig{k}}{\vstate(0)}$} \\
+    $\betainit,\betabath,\betaeff$ & \multicolumn{3}{l}{初期／浴／有効の逆温度} \\
+    $\Jsyk,\Vsb$ & \multicolumn{3}{l}{SYK相互作用強度，系--浴結合強度} \\
+    $\hyb_0,\bandw$ & \multicolumn{3}{l}{共鳴準位模型の結合強度，浴の帯域幅} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+以上でレポート本文を読む準備は整う．
+レポートの中心的な問いは，第\ref{sec:markov_mpemba}節・第\ref{sec:lindblad_carollo}節の$\ovl{2}$に基づく描像と，第\ref{sec:keldysh_wigner}節の$\betaeff(t)$に基づく描像が，同じ現象の異なる記述なのか，それとも異なる現象なのか，という点にある．
+
+% ===============================================================
+\bibliographystyle{unsrt}
+\bibliography{../refs}
+
+\end{document}

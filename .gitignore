@@ -30,3 +30,21 @@ Temporary Items
 # licences do not generally grant redistribution rights, so they are kept
 # locally but not tracked.  See CLAUDE.md for what belongs in references/.
 references/
+
+# LaTeX build artefacts.  Only the .tex sources and the generated PDFs that are
+# meant to be read (reports, notes) are tracked.
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.log
+
+# Python bytecode cache.
+__pycache__/
+*.py[cod]
